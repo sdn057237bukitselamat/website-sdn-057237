@@ -14,6 +14,9 @@ create index if not exists gallery_photos_active_created_at_idx
   on public.gallery_photos (created_at desc)
   where active = true;
 
+create index if not exists gallery_photos_uploaded_by_idx
+  on public.gallery_photos (uploaded_by);
+
 alter table public.gallery_photos enable row level security;
 
 drop policy if exists "gallery_public_read_active" on public.gallery_photos;
