@@ -2091,9 +2091,9 @@ textarea.form-control {
    ========================================================================== */
 .hero {
   background:
-    radial-gradient(circle at 8% 18%, rgba(245,158,11,.22) 0, rgba(245,158,11,0) 28%),
-    radial-gradient(circle at 92% 12%, rgba(16,185,129,.20) 0, rgba(16,185,129,0) 30%),
-    radial-gradient(circle at 78% 88%, rgba(37,99,235,.18) 0, rgba(37,99,235,0) 32%),
+    radial-gradient(circle at 8% 18%, rgba(245,158,11,.16) 0, rgba(245,158,11,0) 28%),
+    radial-gradient(circle at 92% 12%, rgba(16,185,129,.14) 0, rgba(16,185,129,0) 30%),
+    radial-gradient(circle at 78% 88%, rgba(37,99,235,.13) 0, rgba(37,99,235,0) 32%),
     linear-gradient(135deg, #eff6ff 0%, #ecfeff 44%, #f0fdf4 100%);
   border-bottom: 0;
 }
@@ -2113,7 +2113,7 @@ textarea.form-control {
   height: 180px;
   left: -70px;
   top: 90px;
-  background: rgba(245,158,11,.16);
+  background: rgba(245,158,11,.11);
 }
 
 .hero::after {
@@ -2121,12 +2121,12 @@ textarea.form-control {
   height: 220px;
   right: -90px;
   bottom: 30px;
-  background: rgba(16,185,129,.14);
+  background: rgba(16,185,129,.10);
   animation-delay: -3s;
 }
 
 .hero-pattern {
-  opacity: .16;
+  opacity: .11;
   background-image:
     radial-gradient(#2563eb 1.2px, transparent 1.2px),
     radial-gradient(#10b981 1px, transparent 1px);
@@ -2189,7 +2189,7 @@ textarea.form-control {
 .hero-image-card {
   background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(239,246,255,.94));
   border: 1px solid rgba(255,255,255,.9);
-  box-shadow: 0 28px 60px rgba(30,58,138,.18), 0 10px 24px rgba(5,150,105,.10);
+  box-shadow: 0 24px 52px rgba(30,58,138,.15), 0 8px 20px rgba(5,150,105,.08);
   animation: heroCardFloat 6s ease-in-out infinite;
 }
 
@@ -2205,7 +2205,7 @@ textarea.form-control {
 
 .floating-badge {
   border-color: rgba(5,150,105,.18);
-  box-shadow: 0 18px 36px rgba(15,23,42,.14);
+  box-shadow: 0 14px 30px rgba(15,23,42,.12);
   animation: badgeFloat 4.5s ease-in-out infinite;
 }
 
@@ -2251,7 +2251,7 @@ textarea.form-control {
 }
 
 .stats-section .stat-card:hover {
-  transform: translateY(-8px) scale(1.01);
+  transform: translateY(-5px) scale(1.005);
   border-color: transparent;
 }
 
@@ -2378,5 +2378,138 @@ textarea.form-control {
   .floating-badge {
     left: 10px;
     bottom: -16px;
+  }
+}
+
+
+/* ==========================================================================
+   HOMEPAGE QA POLISH — Mobile hierarchy, compact accreditation badge & softer motion
+   ========================================================================== */
+@media (max-width: 480px) {
+  .hero {
+    padding: 42px 0 62px;
+  }
+
+  .hero-grid {
+    gap: 30px;
+  }
+
+  .hero-badge-group {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .hero-badge {
+    padding: 5px 11px;
+    font-size: 0.76rem;
+  }
+
+  .hero-title {
+    font-size: 1.78rem;
+    line-height: 1.22;
+    letter-spacing: -0.025em;
+    margin-bottom: 16px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .hero-buttons {
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
+  .hero-features {
+    gap: 8px;
+    padding-top: 18px;
+  }
+
+  .hero-feature-item {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 7px 10px;
+    font-size: 0.82rem;
+  }
+
+  .hero-image-wrapper {
+    padding: 0 4px;
+  }
+
+  .hero-image-card {
+    padding: 9px;
+    border-radius: 20px;
+    transform: none;
+  }
+
+  .floating-badge {
+    left: 8px;
+    bottom: -14px;
+    padding: 9px 12px;
+    gap: 9px;
+    border-radius: 14px;
+    max-width: calc(100% - 16px);
+  }
+
+  .floating-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .floating-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .floating-title {
+    font-size: 0.68rem;
+  }
+
+  .floating-val {
+    font-size: 0.9rem;
+  }
+
+  .stats-section {
+    padding-top: 30px;
+  }
+
+  .stats-section .stat-card {
+    padding: 20px 18px;
+    gap: 14px;
+  }
+
+  .stats-section .stat-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .stats-section .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .stats-section .stat-label {
+    font-size: 0.82rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-buttons .btn {
+    min-width: 170px;
+  }
+
+  .floating-badge {
+    left: 10px;
+    bottom: -15px;
+    padding: 10px 14px;
   }
 }
