@@ -155,9 +155,27 @@
     </section>
 
     <!-- Formulir Presensi & Tabel Log Harian -->
-    <section class="section bg-white">
+    <section id="attendanceLogin" class="section-sm bg-light">
+  <div class="container" style="max-width:620px;">
+    <div class="contact-form" style="padding:30px;">
+      <div class="section-header" style="margin-bottom:22px;text-align:left;">
+        <span class="section-tag">Akses Terlindungi</span>
+        <h2 class="section-title" style="font-size:1.8rem;">Login Sistem Presensi</h2>
+        <p class="section-desc">Masuk menggunakan akun guru atau administrator yang telah dibuat untuk sistem sekolah.</p>
+      </div>
+      <div id="loginAlert" class="alert alert-danger" style="display:none;font-size:.88rem;"></div>
+      <form id="formLogin">
+        <div class="form-group"><label for="loginEmail" class="form-label">Email</label><input id="loginEmail" type="email" class="form-control" autocomplete="username" required></div>
+        <div class="form-group"><label for="loginPassword" class="form-label">Password</label><input id="loginPassword" type="password" class="form-control" autocomplete="current-password" required></div>
+        <button id="btnLogin" type="submit" class="btn btn-primary" style="width:100%;">Masuk ke Sistem Presensi</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="attendanceApp" class="section bg-white" style="display:none;">
       <div class="container">
-        
+        <div id="attendanceUserBar" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding:14px 18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;"></div>
         <div style="display: grid; grid-template-columns: 1fr 1.8fr; gap: 40px; align-items: start;">
           
           <!-- Kolom Formulir Input Presensi -->
@@ -216,7 +234,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
               <div>
                 <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark);">Log Kehadiran Hari Ini</h3>
-                <div style="font-size: 0.85rem; color: var(--muted);">Data tersimpan otomatis di perangkat dan dapat dicetak sebagai laporan resmi.</div>
+                <div style="font-size: 0.85rem; color: var(--muted);">Data tersimpan aman di database sekolah dan dapat dicetak sebagai laporan resmi.</div>
               </div>
 
               <div style="display: flex; gap: 10px;">
@@ -224,10 +242,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                   <span>Cetak / PDF</span>
                 </button>
-                <button type="button" id="btnResetAbsensi" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5;" title="Reset Data">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                  <span>Reset</span>
-                </button>
+
               </div>
             </div>
 
@@ -265,6 +280,10 @@
 
       </div>
     </section>
+
+    <div id="adminRecap" class="section-sm bg-light" style="display:none;">
+      <div class="container"></div>
+    </div>
 
     <!-- Panduan & Ketentuan Jam Presensi -->
     <section class="section-sm bg-light">
@@ -377,5 +396,7 @@
   </button>
 
   <script src="js/script.js"></script>
+  <script>window.initAttendanceSystem = function () {};</script>
+  <script type="module" src="js/attendance-online.js"></script>
 </body>
 </html>
