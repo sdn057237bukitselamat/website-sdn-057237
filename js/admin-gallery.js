@@ -21,6 +21,8 @@ const CATEGORY_LABELS = {
 const $ = id => document.getElementById(id);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 
+let currentUserId = null;
+
 function showAlert(message, type = 'success') {
   const box = $('adminAlert');
   if (!box) return;
@@ -62,6 +64,7 @@ async function requireAdmin() {
     return false;
   }
 
+  currentUserId = session.user.id;
   $('adminUserBar').innerHTML = '<span>Masuk sebagai <strong>' + esc(profile.nama || profile.email) + '</strong></span><button id="adminLogout" class="btn btn-sm btn-outline" type="button">Keluar</button>';
   $('adminLogout').addEventListener('click', async () => {
     await supabase.auth.signOut();
@@ -69,7 +72,7 @@ async function requireAdmin() {
   });
 
   setView(true);
-  await loadGallery();
+  await Promise.all([loadGallery(), loadAdminUsers()]);
   return true;
 }
 
@@ -121,6 +124,87 @@ async function loadGallery() {
   renderGallery(data || []);
 }
 
+function renderAdminUsers(rows) {
+  const list = $('adminUsersList');
+  if (!list) return;
+
+  if (!rows.length) {
+    list.innerHTML = '<div class="admin-empty">Belum ada profil akun. Buat akun Auth terlebih dahulu melalui Supabase Dashboard.</div>';
+    return;
+  }
+
+  list.innerHTML = rows.map(row => {
+    const isCurrent = row.id === currentUserId;
+    const isAdmin = row.role === 'admin';
+    const displayName = row.nama || 'Nama belum diisi';
+    const action = isAdmin
+      ? (isCurrent
+        ? '<span class="admin-role-badge">Admin aktif</span>'
+        : '<button class="btn btn-sm btn-danger-outline" type="button" data-role-id="' + esc(row.id) + '" data-next-role="guru">Turunkan ke Guru</button>')
+      : '<button class="btn btn-sm btn-primary" type="button" data-role-id="' + esc(row.id) + '" data-next-role="admin">Jadikan Admin</button>';
+
+    return '<article class="admin-user-item">' +
+      '<div class="admin-user-info">' +
+        '<strong>' + esc(displayName) + '</strong>' +
+        '<span>' + esc(row.email || 'Email tidak tersedia') + '</span>' +
+      '</div>' +
+      '<div class="admin-user-role">' +
+        '<span class="admin-role-badge ' + (isAdmin ? 'is-admin' : '') + '">' + (isAdmin ? 'Admin' : 'Guru') + '</span>' +
+        action +
+      '</div>' +
+    '</article>';
+  }).join('');
+
+  list.querySelectorAll('[data-role-id]').forEach(button => {
+    button.addEventListener('click', () => updateUserRole(button.dataset.roleId, button.dataset.nextRole));
+  });
+}
+
+async function loadAdminUsers() {
+  const list = $('adminUsersList');
+  if (list) list.innerHTML = '<div class="admin-empty">Memuat akun...</div>';
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id,email,nama,role,created_at')
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    showAlert('Daftar akun gagal dimuat: ' + error.message, 'error');
+    return;
+  }
+
+  renderAdminUsers(data || []);
+}
+
+async function updateUserRole(userId, nextRole) {
+  if (!['admin', 'guru'].includes(nextRole)) return;
+  if (userId === currentUserId && nextRole !== 'admin') {
+    showAlert('Akun yang sedang digunakan tidak dapat diturunkan dari admin.', 'error');
+    return;
+  }
+
+  const message = nextRole === 'admin'
+    ? 'Tetapkan akun ini sebagai administrator?'
+    : 'Turunkan akun ini menjadi guru?';
+  if (!window.confirm(message)) return;
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ role: nextRole })
+    .eq('id', userId);
+
+  if (error) {
+    showAlert('Perubahan peran gagal: ' + error.message, 'error');
+    return;
+  }
+
+  showAlert(nextRole === 'admin'
+    ? 'Akun berhasil diberi akses administrator.'
+    : 'Akun berhasil diturunkan menjadi guru.');
+  await loadAdminUsers();
+}
+
 async function uploadPhoto(event) {
   event.preventDefault();
   const file = $('galleryFile').files[0];
@@ -148,6 +232,9 @@ async function uploadPhoto(event) {
 
     const { data: publicData } = supabase.storage.from(BUCKET).getPublicUrl(path);
     const publicUrl = publicData.publicUrl;
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) throw new Error('Sesi administrator tidak tersedia.');
 
     const { error: insertError } = await supabase.from('gallery_photos').insert({
       title,
@@ -155,7 +242,7 @@ async function uploadPhoto(event) {
       category,
       storage_path: path,
       public_url: publicUrl,
-      uploaded_by: (await supabase.auth.getUser()).data.user.id
+      uploaded_by: user.id
     });
 
     if (insertError) {
@@ -199,10 +286,11 @@ $('adminLoginForm')?.addEventListener('submit', async event => {
   const button = $('adminLoginButton');
   button.disabled = true;
   button.textContent = 'Memproses...';
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email: $('adminEmail').value.trim(),
     password: $('adminPassword').value
   });
+
   if (error) {
     showLoginAlert('Login gagal. Periksa email dan password.');
   } else {
@@ -220,6 +308,7 @@ $('adminLoginForm')?.addEventListener('submit', async event => {
 
 $('galleryUploadForm')?.addEventListener('submit', uploadPhoto);
 $('refreshGalleryButton')?.addEventListener('click', loadGallery);
+$('refreshUsersButton')?.addEventListener('click', loadAdminUsers);
 
 requireAdmin().catch(error => {
   console.error(error);
