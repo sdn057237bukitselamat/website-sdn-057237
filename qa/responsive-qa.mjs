@@ -64,7 +64,8 @@ for (const width of viewports) {
       hasHeader: !!document.querySelector('.header'),
       hasMain: !!document.querySelector('main'),
       title: document.title,
-      brokenImages: [...document.images].filter(img => img.complete && img.naturalWidth === 0).map(img => img.src),
+      brokenImages: [...document.images].filter(img => img.getAttribute('src') && img.complete && img.naturalWidth === 0).map(img => ({src: img.src, alt: img.alt, cls: img.className})),
+      overflowElements: [...document.querySelectorAll('body *')].map(el => ({el, rect: el.getBoundingClientRect()})).filter(x => x.rect.right > innerWidth + 1 || x.rect.left < -1).slice(0, 12).map(x => ({tag: x.el.tagName, cls: String(x.el.className).slice(0,120), id: x.el.id, left: Math.round(x.rect.left), right: Math.round(x.rect.right), width: Math.round(x.rect.width)})),
       localLinks: [...document.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).filter(h => h && !h.startsWith('#') && !h.startsWith('mailto:') && !h.startsWith('tel:') && !/^https?:/i.test(h))
     }));
 
