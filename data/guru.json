@@ -1,0 +1,106 @@
+{
+  "source": "Data guru sd.xlsx",
+  "updated": "2026-09-18",
+  "notes": "NIP dan NUPTK sengaja tidak disimpan pada data publik. Penugasan kelas/mapel yang tidak tercantum dalam sumber master dipertahankan hanya jika sudah tercantum pada website sebelumnya.",
+  "people": [
+    {
+      "id": "dian-novita-handayani",
+      "nama": "Dian Novita Handayani",
+      "status": "PNS",
+      "tugas": "Pendidik",
+      "kategori": "guru",
+      "jabatan": "Guru",
+      "image": "images/guru-1.svg"
+    },
+    {
+      "id": "fitriana-tumanggor",
+      "nama": "Fitriana Tumanggor",
+      "status": "PPPK Paruh Waktu",
+      "tugas": "Guru Pendidikan Agama Islam (PAI)",
+      "kategori": "mapel",
+      "jabatan": "Guru Pendidikan Agama Islam (PAI)",
+      "image": "images/guru-2.svg"
+    },
+    {
+      "id": "lasminar-sianipar",
+      "nama": "Lasminar Sianipar",
+      "status": "PPPK",
+      "tugas": "Guru Kelas V",
+      "kategori": "kelas",
+      "jabatan": "Guru Kelas V",
+      "image": "images/guru-3.svg"
+    },
+    {
+      "id": "misriana",
+      "nama": "Misriana",
+      "status": "PPPK",
+      "tugas": "Koordinator P5; Guru Kelas I",
+      "kategori": "kelas",
+      "jabatan": "Guru Kelas I / Koordinator P5",
+      "image": "images/guru-4.svg"
+    },
+    {
+      "id": "nova-gustina-koto",
+      "nama": "Nova Gustina Koto, S.Pd. Gr",
+      "status": "PPPK",
+      "tugas": "Koordinator P5; Guru Kelas IV",
+      "kategori": "kelas",
+      "jabatan": "Guru Kelas IV / Koordinator P5",
+      "image": "images/guru-5.svg"
+    },
+    {
+      "id": "rennawaty-sinaga",
+      "nama": "Rennawaty Sinaga",
+      "status": "PNS",
+      "tugas": "Koordinator P5; Guru Kelas III",
+      "kategori": "kelas",
+      "jabatan": "Guru Kelas III / Koordinator P5",
+      "image": "images/guru-6.svg"
+    },
+    {
+      "id": "suriana-br-aruan",
+      "nama": "Suriana Br Aruan",
+      "status": "PPPK",
+      "tugas": "Bendahara BOS/BOP; Guru Kelas II",
+      "kategori": "kelas",
+      "jabatan": "Guru Kelas II / Bendahara BOS/BOP",
+      "image": "images/guru-1.svg"
+    },
+    {
+      "id": "syafaruddin",
+      "nama": "Syafaruddin",
+      "status": "PNS",
+      "tugas": "Guru PJOK",
+      "kategori": "mapel",
+      "jabatan": "Guru PJOK",
+      "image": "images/guru-2.svg"
+    },
+    {
+      "id": "zoelia-hartati",
+      "nama": "Zoelia Hartati",
+      "status": "PPPK",
+      "tugas": "Koordinator P5; Guru Kelas VI",
+      "kategori": "kelas",
+      "jabatan": "Guru Kelas VI / Koordinator P5",
+      "image": "images/guru-3.svg"
+    },
+    {
+      "id": "eliani",
+      "nama": "Eliani",
+      "status": "PNS",
+      "tugas": "Kepala Sekolah",
+      "kategori": "pimpinan",
+      "jabatan": "Kepala Sekolah",
+      "image": "images/kepala-sekolah.svg"
+    },
+    {
+      "id": "rahmad-fauzan",
+      "nama": "Rahmad Fauzan",
+      "status": "PPPK Paruh Waktu",
+      "tugas": "Tenaga Kependidikan",
+      "kategori": "tendik",
+      "jabatan": "Tenaga Kependidikan",
+      "image": "images/guru-6.svg"
+    }
+  ]
+}
