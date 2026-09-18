@@ -148,7 +148,7 @@
                 <p class="news-excerpt">
                   Kabar gembira datang dari kontingen olahraga SDN 057237 Bukit Selamat yang berhasil meraih juara 1 lari cepat 60 meter dan juara 2 bulutangkis tunggal putra pada Olimpiade Olahraga Siswa Nasional (O2SN) tingkat Kecamatan Besitang.
                 </p>
-                <a href="#baca" class="news-link" onclick="alert('Artikel lengkap: Selamat kepada para juara! Pihak sekolah menyampaikan apresiasi setinggi-tingginya kepada siswa dan guru pembimbing yang telah mengharumkan nama sekolah di tingkat kecamatan.'); return false;">
+                <a href="#berita-o2sn" class="news-link js-news-detail" data-news-id="o2sn">
                   <span>Baca Selengkapnya</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -176,7 +176,7 @@
                 <p class="news-excerpt">
                   Dengan mengusung tema 'Gaya Hidup Berkelanjutan', siswa kelas 1 hingga 6 SDN 057237 Bukit Selamat memamerkan aneka hasil kreasi daur ulang pelepah pisang, botol plastik bekas, dan anyaman ramah lingkungan.
                 </p>
-                <a href="#baca" class="news-link" onclick="alert('Artikel lengkap: Kegiatan Gelar Karya P5 ini dihadiri oleh para orang tua siswa, komite sekolah, serta pengawas pendidikan. Pameran ini berhasil menumbuhkan rasa percaya diri anak-anak.'); return false;">
+                <a href="#berita-o2sn" class="news-link js-news-detail" data-news-id="o2sn">
                   <span>Baca Selengkapnya</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -204,7 +204,7 @@
                 <p class="news-excerpt">
                   Kegiatan Persami Gugus Depan SDN 057237 Bukit Selamat diisi dengan uji keterampilan tanda jejak, semaphore, api unggun ceria, serta bakti sosial kebersihan di lingkungan Desa Bukit Selamat.
                 </p>
-                <a href="#baca" class="news-link" onclick="alert('Artikel lengkap: Seluruh anggota Pramuka tampak antusias belajar mandiri dan mempererat rasa kekeluargaan antar regu dalam perkemahan yang diadakan di halaman sekolah.'); return false;">
+                <a href="#berita-o2sn" class="news-link js-news-detail" data-news-id="o2sn">
                   <span>Baca Selengkapnya</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -232,7 +232,7 @@
                 <p class="news-excerpt">
                   Sebanyak 30 siswa kelas 5 mengikuti simulasi gladi bersih ANBK dengan fokus instrumen Asesmen Kompetensi Minimum (AKM) Literasi dan Numerasi serta Survei Lingkungan Belajar.
                 </p>
-                <a href="#baca" class="news-link" onclick="alert('Artikel lengkap: Dengan perangkat komputer sekolah yang memadai dan koneksi stabil, para siswa mampu menyelesaikan soal-soal latihan literasi dan numerasi dengan tenang.'); return false;">
+                <a href="#berita-o2sn" class="news-link js-news-detail" data-news-id="o2sn">
                   <span>Baca Selengkapnya</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -260,7 +260,7 @@
                 <p class="news-excerpt">
                   Diberitahukan kepada seluruh orang tua/wali siswa kelas 1 sampai dengan kelas 6 bahwa pelaksanaan ASTS Ganjil akan dimulai pekan depan. Diharapkan mendampingi belajar anak di rumah.
                 </p>
-                <a href="#baca" class="news-link" onclick="alert('Pengumuman: Jadwal ujian tertulis dan portofolio telah dibagikan melalui grup kelas masing-masing. Pastikan siswa menjaga kesehatan dan hadir tepat waktu.'); return false;">
+                <a href="#berita-o2sn" class="news-link js-news-detail" data-news-id="o2sn">
                   <span>Baca Selengkapnya</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -288,7 +288,7 @@
                 <p class="news-excerpt">
                   Perpustakaan SDN 057237 Bukit Selamat telah menyalurkan buku pegangan siswa terbitan Kemendikbudristek secara cuma-cuma yang bersumber dari alokasi dana Bantuan Operasional Satuan Pendidikan (BOSP).
                 </p>
-                <a href="#baca" class="news-link" onclick="alert('Artikel lengkap: Buku ini dipinjamkan selama satu tahun pelajaran. Siswa diharapkan merawat buku dengan sampul plastik dan tidak mencoret-coret.'); return false;">
+                <a href="#berita-o2sn" class="news-link js-news-detail" data-news-id="o2sn">
                   <span>Baca Selengkapnya</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -352,6 +352,21 @@
         </div>
       </div>
     </section>
+    <dialog id="newsDetailDialog" class="news-detail-dialog" aria-labelledby="newsDetailTitle">
+      <div class="news-detail-shell">
+        <button type="button" class="lightbox-close news-detail-close" data-news-close aria-label="Tutup artikel">×</button>
+        <div class="news-detail-media">
+          <img class="news-detail-image" src="" alt="">
+        </div>
+        <div class="news-detail-content">
+          <span class="section-tag news-detail-category"></span>
+          <div class="news-detail-meta"></div>
+          <h2 id="newsDetailTitle" class="news-detail-title"></h2>
+          <p class="news-detail-body"></p>
+          <button type="button" class="btn btn-outline btn-sm" data-news-close>Tutup</button>
+        </div>
+      </div>
+    </dialog>
   </main>
 
   <!-- Footer -->
