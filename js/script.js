@@ -340,12 +340,25 @@ async function initGuruDirectory() {
     const people = Array.isArray(master.people) ? master.people : [];
     if (!people.length) throw new Error('Data master kosong.');
 
-    grid.innerHTML = people.map(person => `
-      <article class="guru-card" data-guru-category="${escapeHtml(person.kategori)}">
-        <div class="guru-avatar">
-          <img src="${escapeHtml(person.image)}" alt="Foto profil ${escapeHtml(person.nama)}" loading="lazy" decoding="async">
+    const getInitials = (name) => {
+      const baseName = String(name ?? '').split(',')[0].trim();
+      const parts = baseName.split(/\s+/).filter(Boolean);
+      if (!parts.length) return '?';
+      if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+      return (parts[0].slice(0, 1) + parts[parts.length - 1].slice(0, 1)).toUpperCase();
+    };
+
+    grid.innerHTML = people.map(person => {
+      const initials = getInitials(person.nama);
+      const category = escapeHtml(person.kategori);
+      const name = escapeHtml(person.nama);
+      return `
+      <article class="guru-card" data-guru-category="${category}">
+        <div class="guru-avatar guru-avatar-initials guru-avatar-${category}" role="img" aria-label="Avatar ${name}">
+          <span aria-hidden="true">${escapeHtml(initials)}</span>
+          <i aria-hidden="true"></i>
         </div>
-        <h3 class="guru-name">${escapeHtml(person.nama)}</h3>
+        <h3 class="guru-name">${name}</h3>
         <span class="guru-role">${escapeHtml(person.jabatan)}</span>
         <div class="guru-info-list">
           <div class="guru-info-item">
@@ -358,7 +371,8 @@ async function initGuruDirectory() {
           </div>
         </div>
       </article>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
     console.error('Gagal memuat direktori guru:', err);
     grid.innerHTML = '<div style="grid-column:1 / -1; text-align:center; padding:32px; color:var(--muted);">Data pendidik dan tenaga kependidikan belum dapat dimuat. Silakan coba lagi.</div>';
