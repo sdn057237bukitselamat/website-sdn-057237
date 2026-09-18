@@ -38,6 +38,8 @@ function initNavbar() {
 
   // Mobile menu toggle
   if (toggleBtn && navMenu) {
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.setAttribute('aria-controls', 'navMenu');
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       navMenu.classList.toggle('open');
@@ -146,19 +148,28 @@ function initGalleryLightbox() {
   const lightboxCaption = lightbox.querySelector('.lightbox-caption');
   const closeBtn = lightbox.querySelector('.lightbox-close');
 
+  const openLightbox = (item) => {
+    const img = item.querySelector('img');
+    const caption = item.querySelector('.gallery-caption')?.textContent || 'Galeri SDN 057237';
+    if (img && lightboxImg) {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || caption;
+    }
+    if (lightboxCaption) lightboxCaption.textContent = caption;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
   galleryItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const img = item.querySelector('img');
-      const caption = item.querySelector('.gallery-caption')?.textContent || 'Galeri SDN 057237';
-      if (img && lightboxImg) {
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt || caption;
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', item.querySelector('img')?.alt || 'Buka gambar galeri');
+    item.addEventListener('click', () => openLightbox(item));
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightbox(item);
       }
-      if (lightboxCaption) {
-        lightboxCaption.textContent = caption;
-      }
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
     });
   });
 
