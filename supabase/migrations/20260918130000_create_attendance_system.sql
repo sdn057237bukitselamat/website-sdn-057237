@@ -121,3 +121,8 @@ insert into public.guru (id,nama,status,tugas,kategori,jabatan,image) values
 ('eliani','Eliani','PNS','Kepala Sekolah','pimpinan','Kepala Sekolah','images/kepala-sekolah.svg'),
 ('rahmad-fauzan','Rahmad Fauzan','PPPK Paruh Waktu','Tenaga Kependidikan','tendik','Tenaga Kependidikan','images/guru-6.svg')
 on conflict (id) do update set nama=excluded.nama,status=excluded.status,tugas=excluded.tugas,kategori=excluded.kategori,jabatan=excluded.jabatan,image=excluded.image,aktif=true;
+
+grant select on public.guru to authenticated;
+grant select on public.profiles to authenticated;
+grant select, insert, update on public.attendance to authenticated;
+grant usage, select on sequence public.attendance_id_seq to authenticated;
