@@ -1,3 +1,4 @@
+// Browser QA baseline: 320, 375, 768, 1024, and 1440px.
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
