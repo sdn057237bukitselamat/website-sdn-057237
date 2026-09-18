@@ -30,7 +30,7 @@
         <div class="admin-card admin-login-card">
           <span class="section-tag">Akses Terlindungi</span>
           <h1>Dashboard Admin</h1>
-          <p class="admin-muted">Masuk menggunakan akun administrator sekolah untuk mengelola foto galeri.</p>
+          <p class="admin-muted">Masuk menggunakan akun administrator sekolah untuk mengelola foto dan akun admin.</p>
           <div id="adminLoginAlert" class="alert alert-danger" hidden></div>
           <form id="adminLoginForm">
             <label class="form-label" for="adminEmail">Email</label>
@@ -48,8 +48,8 @@
         <div class="admin-page-heading">
           <div>
             <span class="section-tag">Manajemen Konten</span>
-            <h1>Galeri Foto</h1>
-            <p class="admin-muted">Upload dokumentasi kegiatan dan tampilkan otomatis di halaman galeri.</p>
+            <h1>Dashboard Administrator</h1>
+            <p class="admin-muted">Kelola galeri foto dan hak akses akun administrator sekolah.</p>
           </div>
           <a class="btn btn-outline" href="galeri.html">Lihat Galeri Publik</a>
         </div>
@@ -103,6 +103,38 @@
             <div id="galleryAdminList" class="admin-gallery-list"></div>
           </div>
         </div>
+
+        <section class="admin-card admin-account-card">
+          <div class="admin-card-heading">
+            <div>
+              <span class="section-tag">Setup Akun</span>
+              <h2>Akun Administrator</h2>
+              <p class="admin-muted">Buat akun Auth terlebih dahulu di Supabase Dashboard, lalu tetapkan peran administrator di sini.</p>
+            </div>
+            <button id="refreshUsersButton" class="btn btn-sm btn-outline" type="button">Muat Ulang</button>
+          </div>
+
+          <div class="admin-setup-steps">
+            <div class="admin-setup-step">
+              <strong>1. Buat akun Auth</strong>
+              <span>Di Supabase Dashboard buka Authentication → Users → Add user. Gunakan email dan password milik administrator.</span>
+            </div>
+            <div class="admin-setup-step">
+              <strong>2. Pastikan profil tersedia</strong>
+              <span>Setelah akun dibuat, sistem otomatis membuat profil dengan peran awal <code>guru</code>.</span>
+            </div>
+            <div class="admin-setup-step">
+              <strong>3. Aktifkan peran admin</strong>
+              <span>Gunakan tombol <strong>Jadikan Admin</strong> pada daftar akun di bawah.</span>
+            </div>
+          </div>
+
+          <p class="admin-account-note">
+            <a class="btn btn-sm btn-outline" href="https://supabase.com/dashboard/project/aeamvbcuyfxgthzwtmlr/auth/users" target="_blank" rel="noopener noreferrer">Buka Supabase Auth Users</a>
+          </p>
+
+          <div id="adminUsersList" class="admin-users-list"></div>
+        </section>
       </div>
     </section>
   </main>
