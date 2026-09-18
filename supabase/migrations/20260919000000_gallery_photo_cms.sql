@@ -49,6 +49,22 @@ grant select on public.gallery_photos to anon, authenticated;
 grant insert, update, delete on public.gallery_photos to authenticated;
 grant usage, select on sequence public.gallery_photos_id_seq to authenticated;
 
+
+drop policy if exists "guru_public_read_active" on public.guru;
+create policy "guru_public_read_active"
+on public.guru for select to anon, authenticated
+using (aktif = true);
+
+drop policy if exists "guru_admin_update" on public.guru;
+create policy "guru_admin_update"
+on public.guru for update to authenticated
+using ((select private.is_admin()))
+with check ((select private.is_admin()));
+
+grant select on public.guru to anon, authenticated;
+grant update on public.guru to authenticated;
+
+
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('website-media', 'website-media', true, 6291456, array['image/jpeg','image/png','image/webp'])
 on conflict (id) do update
@@ -64,18 +80,18 @@ using (bucket_id = 'website-media');
 drop policy if exists "website_media_admin_insert" on storage.objects;
 create policy "website_media_admin_insert"
 on storage.objects for insert to authenticated
-with check (bucket_id = 'website-media' and name like 'galeri/%' and (select private.is_admin()));
+with check (bucket_id = 'website-media' and (name like 'galeri/%' or name like 'guru/%') and (select private.is_admin()));
 
 drop policy if exists "website_media_admin_update" on storage.objects;
 create policy "website_media_admin_update"
 on storage.objects for update to authenticated
-using (bucket_id = 'website-media' and name like 'galeri/%' and (select private.is_admin()))
-with check (bucket_id = 'website-media' and name like 'galeri/%' and (select private.is_admin()));
+using (bucket_id = 'website-media' and (name like 'galeri/%' or name like 'guru/%') and (select private.is_admin()))
+with check (bucket_id = 'website-media' and (name like 'galeri/%' or name like 'guru/%') and (select private.is_admin()));
 
 drop policy if exists "website_media_admin_delete" on storage.objects;
 create policy "website_media_admin_delete"
 on storage.objects for delete to authenticated
-using (bucket_id = 'website-media' and name like 'galeri/%' and (select private.is_admin()));
+using (bucket_id = 'website-media' and (name like 'galeri/%' or name like 'guru/%') and (select private.is_admin()));
 
 create or replace function private.prevent_last_admin_demote()
 returns trigger
