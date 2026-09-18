@@ -2588,3 +2588,74 @@ textarea.form-control {
     padding: 10px 14px;
   }
 }
+
+/* ==========================================================================
+   HOMEPAGE WATER MOTION — Floating bubbles & animated ocean waves
+   ========================================================================== */
+.hero { isolation: isolate; }
+
+.hero-bubbles {
+  position: absolute; inset: 0; z-index: 1; overflow: hidden;
+  pointer-events: none;
+}
+.hero-bubble {
+  --bubble-size: 42px;
+  position: absolute; width: var(--bubble-size); height: var(--bubble-size);
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.72);
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255,255,255,.92) 0 5%, rgba(255,255,255,.28) 18%, transparent 34%),
+    radial-gradient(circle at 65% 72%, rgba(125,211,252,.24), rgba(56,189,248,.08) 48%, rgba(255,255,255,.03) 72%);
+  box-shadow: inset -7px -8px 14px rgba(37,99,235,.10), inset 7px 6px 12px rgba(255,255,255,.48), 0 8px 24px rgba(37,99,235,.10);
+  backdrop-filter: blur(1px); opacity: .82;
+  animation: bubbleRise 9s ease-in-out infinite;
+}
+.hero-bubble::after {
+  content: ""; position: absolute; width: 24%; height: 13%; left: 22%; top: 19%;
+  border-radius: 50%; background: rgba(255,255,255,.78); transform: rotate(-24deg);
+}
+.bubble-1 { --bubble-size:58px; left:3%; top:13%; animation-duration:10s; }
+.bubble-2 { --bubble-size:26px; left:14%; top:48%; animation-duration:8s; animation-delay:-2s; }
+.bubble-3 { --bubble-size:74px; left:43%; top:5%; animation-duration:12s; animation-delay:-4s; }
+.bubble-4 { --bubble-size:34px; left:58%; top:31%; animation-duration:9s; animation-delay:-6s; }
+.bubble-5 { --bubble-size:48px; right:22%; top:9%; animation-duration:11s; animation-delay:-1s; }
+.bubble-6 { --bubble-size:82px; right:4%; top:37%; animation-duration:13s; animation-delay:-5s; }
+.bubble-7 { --bubble-size:22px; right:14%; top:65%; animation-duration:7s; animation-delay:-3s; }
+.bubble-8 { --bubble-size:44px; left:25%; bottom:14%; animation-duration:10s; animation-delay:-7s; }
+.bubble-9 { --bubble-size:30px; left:67%; bottom:9%; animation-duration:8s; animation-delay:-4s; }
+.bubble-10 { --bubble-size:64px; right:30%; bottom:2%; animation-duration:12s; animation-delay:-8s; }
+.bubble-11 { --bubble-size:18px; left:6%; bottom:31%; animation-duration:7s; animation-delay:-5s; }
+.bubble-12 { --bubble-size:38px; right:7%; top:16%; animation-duration:9s; animation-delay:-7s; }
+
+.hero-grid { z-index: 3; }
+.hero-wave {
+  position:absolute; left:0; right:0; bottom:-1px; height:155px; z-index:2;
+  overflow:hidden; pointer-events:none; line-height:0;
+}
+.hero-wave svg { width:100%; height:100%; display:block; }
+.wave-back { fill:rgba(37,99,235,.24); animation:waveSway 11s ease-in-out infinite; }
+.wave-mid { fill:rgba(14,165,233,.36); animation:waveSwayReverse 8s ease-in-out infinite; }
+.wave-front { fill:rgba(255,255,255,.94); animation:waveSway 7s ease-in-out infinite; }
+
+@keyframes bubbleRise {
+  0%,100% { transform:translate3d(0,18px,0) scale(.94); }
+  25% { transform:translate3d(12px,-8px,0) scale(1); }
+  50% { transform:translate3d(-7px,-22px,0) scale(1.04); }
+  75% { transform:translate3d(10px,-6px,0) scale(.98); }
+}
+@keyframes waveSway {
+  0%,100% { transform:translateX(-1.5%) translateY(2px) scaleX(1.03); }
+  50% { transform:translateX(1.5%) translateY(-4px) scaleX(1.03); }
+}
+@keyframes waveSwayReverse {
+  0%,100% { transform:translateX(1.5%) translateY(-1px) scaleX(1.04); }
+  50% { transform:translateX(-1.5%) translateY(4px) scaleX(1.04); }
+}
+
+@media (max-width:768px) {
+  .hero-wave { height:95px; }
+  .hero-bubble { opacity:.58; }
+  .bubble-3,.bubble-6,.bubble-10 { display:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .hero-bubble,.wave-back,.wave-mid,.wave-front { animation:none; }
+}
