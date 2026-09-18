@@ -69,9 +69,12 @@ for (const width of viewports) {
       localLinks: [...document.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).filter(h => h && !h.startsWith('#') && !h.startsWith('mailto:') && !h.startsWith('tel:') && !/^https?:/i.test(h))
     }));
 
-    if (result.scrollWidth > width + 1) failures.push(`${pageName} @ ${width}px: horizontal overflow ${result.scrollWidth}px`);
+    if (result.scrollWidth > width + 1) {
+      failures.push(`${pageName} @ ${width}px: horizontal overflow ${result.scrollWidth}px`);
+      console.error(`OVERFLOW ${pageName} @ ${width}px`, JSON.stringify(result.overflowElements));
+    }
     if (!result.hasHeader || !result.hasMain) failures.push(`${pageName} @ ${width}px: missing core layout`);
-    if (result.brokenImages.length) failures.push(`${pageName} @ ${width}px: broken images: ${result.brokenImages.join(', ')}`);
+    if (result.brokenImages.length) failures.push(`${pageName} @ ${width}px: broken images: ${JSON.stringify(result.brokenImages)}`);
     if (localFailures.length) failures.push(...localFailures.map(x => `${pageName} @ ${width}px: ${x}`));
 
     const checked = new Set();
