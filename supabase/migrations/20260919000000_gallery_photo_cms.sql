@@ -76,3 +76,28 @@ drop policy if exists "website_media_admin_delete" on storage.objects;
 create policy "website_media_admin_delete"
 on storage.objects for delete to authenticated
 using (bucket_id = 'website-media' and name like 'galeri/%' and (select private.is_admin()));
+
+create or replace function private.prevent_last_admin_demote()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, private
+as $$
+begin
+  if old.role = 'admin' and new.role <> 'admin' then
+    if not exists (
+      select 1 from public.profiles
+      where role = 'admin' and id <> old.id
+    ) then
+      raise exception 'Tidak dapat menurunkan admin terakhir. Tetapkan admin pengganti terlebih dahulu.';
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists profiles_prevent_last_admin_demote on public.profiles;
+create trigger profiles_prevent_last_admin_demote
+before update of role on public.profiles
+for each row
+execute function private.prevent_last_admin_demote();
