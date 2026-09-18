@@ -334,31 +334,26 @@ async function initGuruDirectory() {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
   }[char]));
 
-  try {
-    const response = await fetch('data/guru.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const master = await response.json();
-    const people = Array.isArray(master.people) ? master.people : [];
-    if (!people.length) throw new Error('Data master kosong.');
+  const getInitials = (name) => {
+    const baseName = String(name ?? '').split(',')[0].trim();
+    const parts = baseName.split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+    return (parts[0].slice(0, 1) + parts[parts.length - 1].slice(0, 1)).toUpperCase();
+  };
 
-    const getInitials = (name) => {
-      const baseName = String(name ?? '').split(',')[0].trim();
-      const parts = baseName.split(/\s+/).filter(Boolean);
-      if (!parts.length) return '?';
-      if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
-      return (parts[0].slice(0, 1) + parts[parts.length - 1].slice(0, 1)).toUpperCase();
-    };
-
+  const render = (people) => {
     grid.innerHTML = people.map(person => {
-      const initials = getInitials(person.nama);
       const category = escapeHtml(person.kategori);
       const name = escapeHtml(person.nama);
+      const image = String(person.image || '').trim();
+      const avatar = image
+        ? '<img class="guru-avatar guru-avatar-photo guru-avatar-' + category + '" src="' + escapeHtml(image) + '" alt="Foto ' + name + '" loading="lazy">'
+        : '<div class="guru-avatar guru-avatar-initials guru-avatar-' + category + '" role="img" aria-label="Avatar ' + name + '"><span aria-hidden="true">' + escapeHtml(getInitials(person.nama)) + '</span><i aria-hidden="true"></i></div>';
+
       return `
       <article class="guru-card" data-guru-category="${category}">
-        <div class="guru-avatar guru-avatar-initials guru-avatar-${category}" role="img" aria-label="Avatar ${name}">
-          <span aria-hidden="true">${escapeHtml(initials)}</span>
-          <i aria-hidden="true"></i>
-        </div>
+        ${avatar}
         <h3 class="guru-name">${name}</h3>
         <span class="guru-role">${escapeHtml(person.jabatan)}</span>
         <div class="guru-info-list">
@@ -374,9 +369,34 @@ async function initGuruDirectory() {
       </article>
       `;
     }).join('');
-  } catch (err) {
-    console.error('Gagal memuat direktori guru:', err);
-    grid.innerHTML = '<div style="grid-column:1 / -1; text-align:center; padding:32px; color:var(--muted);">Data pendidik dan tenaga kependidikan belum dapat dimuat. Silakan coba lagi.</div>';
+  };
+
+  try {
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm');
+    const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+    const { data, error } = await supabase
+      .from('guru')
+      .select('id,nama,status,tugas,kategori,jabatan,image')
+      .eq('aktif', true)
+      .order('nama', { ascending: true });
+
+    if (error) throw error;
+    const people = Array.isArray(data) ? data : [];
+    if (!people.length) throw new Error('Data guru kosong.');
+    render(people);
+  } catch (dbError) {
+    console.warn('Data guru online belum tersedia, menggunakan data cadangan:', dbError);
+    try {
+      const response = await fetch('data/guru.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const master = await response.json();
+      const people = Array.isArray(master.people) ? master.people : [];
+      if (!people.length) throw new Error('Data master kosong.');
+      render(people);
+    } catch (err) {
+      console.error('Gagal memuat direktori guru:', err);
+      grid.innerHTML = '<div style="grid-column:1 / -1; text-align:center; padding:32px; color:var(--muted);">Data pendidik dan tenaga kependidikan belum dapat dimuat. Silakan coba lagi.</div>';
+    }
   }
 }
 
