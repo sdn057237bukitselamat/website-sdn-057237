@@ -50,10 +50,15 @@ grant insert, update, delete on public.gallery_photos to authenticated;
 grant usage, select on sequence public.gallery_photos_id_seq to authenticated;
 
 
+drop policy if exists "guru_authenticated_read" on public.guru;
 drop policy if exists "guru_public_read_active" on public.guru;
 create policy "guru_public_read_active"
-on public.guru for select to anon, authenticated
+on public.guru for select to anon
 using (aktif = true);
+
+create policy "guru_authenticated_read"
+on public.guru for select to authenticated
+using (aktif = true or (select private.is_admin()) or id = (select private.current_guru_id()));
 
 drop policy if exists "guru_admin_update" on public.guru;
 create policy "guru_admin_update"
