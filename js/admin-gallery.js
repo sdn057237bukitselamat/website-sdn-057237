@@ -72,7 +72,7 @@ async function requireAdmin() {
   });
 
   setView(true);
-  await Promise.all([loadGallery(), loadAdminUsers()]);
+  await Promise.all([loadGallery(), loadAdminUsers(), loadTeachers()]);
   return true;
 }
 
@@ -205,6 +205,143 @@ async function updateUserRole(userId, nextRole) {
   await loadAdminUsers();
 }
 
+function renderTeachers(rows) {
+  const list = $('teacherPhotoList');
+  if (!list) return;
+
+  if (!rows.length) {
+    list.innerHTML = '<div class="admin-empty">Data guru belum tersedia.</div>';
+    return;
+  }
+
+  list.innerHTML = rows.map(row => {
+    const image = row.image && /^https?:\\/\\//.test(row.image)
+      ? row.image
+      : (row.image || '');
+    const hasImage = Boolean(image);
+    return '<article class="admin-teacher-item">' +
+      '<div class="admin-teacher-preview">' +
+        (hasImage
+          ? '<img src="' + esc(image) + '" alt="Foto ' + esc(row.nama) + '" loading="lazy">'
+          : '<div class="admin-teacher-placeholder">' + esc(getInitials(row.nama)) + '</div>') +
+      '</div>' +
+      '<div class="admin-teacher-info">' +
+        '<strong>' + esc(row.nama) + '</strong>' +
+        '<span>' + esc(row.jabatan || row.tugas || '') + '</span>' +
+        '<small>' + (hasImage ? 'Foto saat ini tersedia' : 'Belum ada foto') + '</small>' +
+      '</div>' +
+      '<div class="admin-teacher-actions">' +
+        '<input class="form-control teacher-photo-input" type="file" accept="image/jpeg,image/png,image/webp" data-teacher-id="' + esc(row.id) + '" aria-label="Pilih foto untuk ' + esc(row.nama) + '">' +
+        '<button class="btn btn-sm btn-primary teacher-photo-upload" type="button" data-teacher-id="' + esc(row.id) + '">Upload Foto</button>' +
+      '</div>' +
+    '</article>';
+  }).join('');
+
+  list.querySelectorAll('.teacher-photo-upload').forEach(button => {
+    button.addEventListener('click', () => uploadTeacherPhoto(button.dataset.teacherId, button));
+  });
+}
+
+function getInitials(name) {
+  const parts = String(name || '').split(/\\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  return parts.length === 1
+    ? parts[0].slice(0, 2).toUpperCase()
+    : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+async function loadTeachers() {
+  const list = $('teacherPhotoList');
+  if (list) list.innerHTML = '<div class="admin-empty">Memuat data guru...</div>';
+
+  const { data, error } = await supabase
+    .from('guru')
+    .select('id,nama,jabatan,tugas,image,aktif')
+    .eq('aktif', true)
+    .order('nama', { ascending: true });
+
+  if (error) {
+    showAlert('Data guru gagal dimuat: ' + error.message, 'error');
+    return;
+  }
+
+  renderTeachers(data || []);
+}
+
+async function uploadTeacherPhoto(guruId, button) {
+  const input = document.querySelector('.teacher-photo-input[data-teacher-id="' + CSS.escape(guruId) + '"]');
+  const file = input?.files?.[0];
+  if (!file) {
+    showAlert('Pilih foto terlebih dahulu.', 'error');
+    return;
+  }
+  if (!ALLOWED_TYPES.has(file.type)) {
+    showAlert('Format foto harus JPG, PNG, atau WebP.', 'error');
+    return;
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    showAlert('Ukuran foto maksimal 6 MB.', 'error');
+    return;
+  }
+
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = 'Mengunggah...';
+
+  let uploadedPath = null;
+  try {
+    const { data: current, error: currentError } = await supabase
+      .from('guru')
+      .select('id,nama,image')
+      .eq('id', guruId)
+      .single();
+    if (currentError) throw currentError;
+
+    const extension = file.name.split('.').pop().toLowerCase();
+    uploadedPath = 'guru/' + guruId + '/' + crypto.randomUUID() + '.' + extension;
+
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(uploadedPath, file, {
+        contentType: file.type,
+        cacheControl: '31536000',
+        upsert: false
+      });
+    if (uploadError) throw uploadError;
+
+    const { data: publicData } = supabase.storage.from(BUCKET).getPublicUrl(uploadedPath);
+    const { error: updateError } = await supabase
+      .from('guru')
+      .update({ image: publicData.publicUrl })
+      .eq('id', guruId);
+
+    if (updateError) {
+      await supabase.storage.from(BUCKET).remove([uploadedPath]);
+      uploadedPath = null;
+      throw updateError;
+    }
+
+    const oldPath = String(current.image || '').includes('/storage/v1/object/public/' + BUCKET + '/')
+      ? String(current.image).split('/storage/v1/object/public/' + BUCKET + '/')[1]
+      : null;
+    if (oldPath && oldPath.startsWith('guru/')) {
+      const { error: removeOldError } = await supabase.storage.from(BUCKET).remove([oldPath]);
+      if (removeOldError) {
+        console.warn('Foto lama tidak dapat dihapus:', removeOldError);
+      }
+    }
+
+    showAlert('Foto ' + (current.nama || 'guru') + ' berhasil diperbarui.');
+    await loadTeachers();
+  } catch (error) {
+    console.error(error);
+    showAlert('Upload foto guru gagal: ' + (error.message || 'Kesalahan tidak diketahui.'), 'error');
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
+  }
+}
+
 async function uploadPhoto(event) {
   event.preventDefault();
   const file = $('galleryFile').files[0];
@@ -308,6 +445,7 @@ $('adminLoginForm')?.addEventListener('submit', async event => {
 
 $('galleryUploadForm')?.addEventListener('submit', uploadPhoto);
 $('refreshGalleryButton')?.addEventListener('click', loadGallery);
+$('refreshTeachersButton')?.addEventListener('click', loadTeachers);
 $('refreshUsersButton')?.addEventListener('click', loadAdminUsers);
 
 requireAdmin().catch(error => {
