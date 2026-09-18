@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFaqAccordion();
   initContactForm();
   initLiveClock();
+  initGuruDirectory();
   initAttendanceSystem();
 });
 
@@ -350,25 +351,11 @@ function initLiveClock() {
 /* ==========================================================================
    10. Sistem Absensi Guru & Pegawai
    ========================================================================== */
-// Master Data 14 Guru & Pegawai SDN 057237 Bukit Selamat
-const DAFTAR_GURU_PEGAWAI = [
-  { id: "1", nama: "H. Supardi, S.Pd., M.Pd.", nip: "19740512 199803 1 004", jabatan: "Kepala Sekolah" },
-  { id: "2", nama: "Hj. Maryati, S.Pd.", nip: "19780814 200501 2 008", jabatan: "Guru Kelas I" },
-  { id: "3", nama: "Ahmad Zulkarnain, S.Pd.", nip: "19851120 201101 1 012", jabatan: "Guru Kelas II" },
-  { id: "4", nama: "Dewi Sartika, S.Pd.", nip: "19880615 201402 2 009", jabatan: "Guru Kelas III" },
-  { id: "5", nama: "Nurhaliza, S.Pd.", nip: "19890403 201903 2 015", jabatan: "Guru Kelas IV / Koord. P5" },
-  { id: "6", nama: "Siti Rahmah, S.Pd.", nip: "19870210 201001 2 011", jabatan: "Guru Kelas V / Bendahara BOS" },
-  { id: "7", nama: "Hendra Wijaya, S.Pd.", nip: "19820925 200801 1 007", jabatan: "Guru Kelas VI" },
-  { id: "8", nama: "Drs. M. Ridwan Lubis", nip: "19750319 200212 1 005", jabatan: "Guru Pend. Agama Islam (PAI)" },
-  { id: "9", nama: "Fitri Handayani, S.Pd.", nip: "19930418 202121 2 004", jabatan: "Guru Pend. Agama Islam (PAI)" },
-  { id: "10", nama: "Bambang Irawan, S.Pd.", nip: "19920108 202221 1 003", jabatan: "Guru PJOK / Pembina Pramuka" },
-  { id: "11", nama: "Sri Wahyuni, S.Pd.", nip: "19901202 201902 2 010", jabatan: "Guru Bahasa Inggris / Mulok" },
-  { id: "12", nama: "Syahrial, S.Pd.", nip: "19940822 202221 1 002", jabatan: "Guru Pendamping Khusus / Inklusi" },
-  { id: "13", nama: "Rian Anggara, A.Md.", nip: "19910515 201601 1 006", jabatan: "Operator Dapodik & Tata Usaha" },
-  { id: "14", nama: "Joko Susilo", nip: "-", jabatan: "Petugas Kebersihan & Keamanan" }
-];
+// Data master guru/pegawai dimuat dari data/guru.json agar guru.html dan absensi
+// menggunakan satu sumber data. NIP/NUPTK tidak disimpan pada data publik.
+let DAFTAR_GURU_PEGAWAI = [];
 
-function initAttendanceSystem() {
+async function initAttendanceSystem() {
   const form = document.getElementById('formAbsensi');
   const pegawaiSelect = document.getElementById('pegawaiSelect');
   const nipInput = document.getElementById('nipInput');
@@ -380,6 +367,23 @@ function initAttendanceSystem() {
   const alertBox = document.getElementById('absensiAlert');
 
   if (!tableBody) return; // Not on absensi page
+
+  // Load the single source of truth.
+  try {
+    const response = await fetch('data/guru.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const master = await response.json();
+    DAFTAR_GURU_PEGAWAI = Array.isArray(master.people) ? master.people : [];
+  } catch (err) {
+    console.error('Gagal memuat data master guru:', err);
+    if (alertBox) {
+      alertBox.style.display = 'flex';
+      alertBox.classList.remove('alert-success');
+      alertBox.textContent = 'Data guru/pegawai tidak dapat dimuat. Silakan coba lagi.';
+    }
+    if (pegawaiSelect) pegawaiSelect.disabled = true;
+    return;
+  }
 
   // Populate Dropdown
   if (pegawaiSelect) {
@@ -393,7 +397,6 @@ function initAttendanceSystem() {
     pegawaiSelect.addEventListener('change', () => {
       const selected = DAFTAR_GURU_PEGAWAI.find(p => p.id === pegawaiSelect.value);
       if (selected) {
-        if (nipInput) nipInput.value = selected.nip;
         if (jabatanInput) jabatanInput.value = selected.jabatan;
       } else {
         if (nipInput) nipInput.value = '';
@@ -402,95 +405,17 @@ function initAttendanceSystem() {
     });
   }
 
-  // Load from LocalStorage or seed default data
-  const storageKey = 'sdn057237_absensi_data';
+  // Versioned storage key prevents stale demo records from being mixed
+  // with the current school master data.
+  const storageKey = 'sdn057237_absensi_data_v2';
   let absensiRecords = [];
   try {
     const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      absensiRecords = JSON.parse(saved);
-    }
+    if (saved) absensiRecords = JSON.parse(saved);
+    if (!Array.isArray(absensiRecords)) absensiRecords = [];
   } catch (err) {
     console.warn('LocalStorage error:', err);
-  }
-
-  // If empty, generate realistic seed records for today
-  if (!absensiRecords || absensiRecords.length === 0) {
-    absensiRecords = [
-      {
-        nama: "H. Supardi, S.Pd., M.Pd.",
-        nip: "19740512 199803 1 004",
-        jabatan: "Kepala Sekolah",
-        waktu: "07.05 WIB",
-        status: "hadir",
-        keterangan: "Memimpin brefing pagi dewan guru"
-      },
-      {
-        nama: "Hj. Maryati, S.Pd.",
-        nip: "19780814 200501 2 008",
-        jabatan: "Guru Kelas I",
-        waktu: "07.12 WIB",
-        status: "hadir",
-        keterangan: "Mengajar pembelajaran tematik pagi"
-      },
-      {
-        nama: "Ahmad Zulkarnain, S.Pd.",
-        nip: "19851120 201101 1 012",
-        jabatan: "Guru Kelas II",
-        waktu: "07.15 WIB",
-        status: "hadir",
-        keterangan: "Mengajar di kelas"
-      },
-      {
-        nama: "Nurhaliza, S.Pd.",
-        nip: "19890403 201903 2 015",
-        jabatan: "Guru Kelas IV / Koord. P5",
-        waktu: "07.18 WIB",
-        status: "hadir",
-        keterangan: "Piket kebersihan gerbang & mengajar"
-      },
-      {
-        nama: "Drs. M. Ridwan Lubis",
-        nip: "19750319 200212 1 005",
-        jabatan: "Guru Pend. Agama Islam (PAI)",
-        waktu: "07.20 WIB",
-        status: "hadir",
-        keterangan: "Pembinaan sholat Dhuha bersama siswa"
-      },
-      {
-        nama: "Bambang Irawan, S.Pd.",
-        nip: "19920108 202221 1 003",
-        jabatan: "Guru PJOK / Pembina Pramuka",
-        waktu: "07.22 WIB",
-        status: "hadir",
-        keterangan: "Senam pagi & olahraga siswa"
-      },
-      {
-        nama: "Dewi Sartika, S.Pd.",
-        nip: "19880615 201402 2 009",
-        jabatan: "Guru Kelas III",
-        waktu: "07.25 WIB",
-        status: "izin",
-        keterangan: "Izin keperluan keluarga mendesak (Surat terlampir)"
-      },
-      {
-        nama: "Siti Rahmah, S.Pd.",
-        nip: "19870210 201001 2 011",
-        jabatan: "Guru Kelas V / Bendahara BOS",
-        waktu: "07.30 WIB",
-        status: "dinas",
-        keterangan: "Rekonsiliasi BOSP di Disdik Kab. Langkat"
-      },
-      {
-        nama: "Rian Anggara, A.Md.",
-        nip: "19910515 201601 1 006",
-        jabatan: "Operator Dapodik & Tata Usaha",
-        waktu: "07.10 WIB",
-        status: "hadir",
-        keterangan: "Pelayanan administrasi & sinkronisasi Dapodik"
-      }
-    ];
-    saveToStorage(absensiRecords);
+    absensiRecords = [];
   }
 
   function saveToStorage(data) {
@@ -536,7 +461,6 @@ function initAttendanceSystem() {
           <td><span style="font-weight: 700; color: var(--primary);">${item.waktu}</span></td>
           <td>
             <div style="font-weight: 700; color: var(--dark);">${item.nama}</div>
-            <div style="font-size: 0.8rem; color: var(--muted);">NIP: ${item.nip || '-'}</div>
           </td>
           <td>${item.jabatan}</td>
           <td><span class="badge-status ${badgeClass}">${badgeLabel}</span></td>
@@ -550,7 +474,7 @@ function initAttendanceSystem() {
   }
 
   function updateCounterCards() {
-    const totalStaff = DAFTAR_GURU_PEGAWAI.length; // 14
+    const totalStaff = DAFTAR_GURU_PEGAWAI.length;
     let hadirCount = 0;
     let izinCount = 0;
     let sakitCount = 0;
@@ -606,7 +530,6 @@ function initAttendanceSystem() {
 
       const newRecord = {
         nama: pegawai.nama,
-        nip: pegawai.nip,
         jabatan: pegawai.jabatan,
         waktu: waktuStr,
         status: status,
@@ -679,4 +602,47 @@ function initAttendanceSystem() {
 
   // Initial render
   renderTable();
+}/* ==========================================================================
+   5. Direktori Guru & Tenaga Kependidikan
+   ========================================================================== */
+async function initGuruDirectory() {
+  const grid = document.getElementById('guruGrid');
+  if (!grid) return;
+
+  const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+  }[char]));
+
+  try {
+    const response = await fetch('data/guru.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const master = await response.json();
+    const people = Array.isArray(master.people) ? master.people : [];
+    if (!people.length) throw new Error('Data master kosong.');
+
+    grid.innerHTML = people.map(person => `
+      <article class="guru-card" data-guru-category="${escapeHtml(person.kategori)}">
+        <div class="guru-avatar">
+          <img src="${escapeHtml(person.image)}" alt="Foto profil ${escapeHtml(person.nama)}" loading="lazy" decoding="async">
+        </div>
+        <h3 class="guru-name">${escapeHtml(person.nama)}</h3>
+        <span class="guru-role">${escapeHtml(person.jabatan)}</span>
+        <div class="guru-info-list">
+          <div class="guru-info-item">
+            <span class="guru-info-label">Status:</span>
+            <span>${escapeHtml(person.status)}</span>
+          </div>
+          <div class="guru-info-item">
+            <span class="guru-info-label">Tugas:</span>
+            <span>${escapeHtml(person.tugas)}</span>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  } catch (err) {
+    console.error('Gagal memuat direktori guru:', err);
+    grid.innerHTML = '<div style="grid-column:1 / -1; text-align:center; padding:32px; color:var(--muted);">Data pendidik dan tenaga kependidikan belum dapat dimuat. Silakan coba lagi.</div>';
+  }
 }
+
+
