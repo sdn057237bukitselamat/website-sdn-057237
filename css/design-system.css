@@ -519,3 +519,9 @@ body {
     grid-template-columns: 1fr !important;
   }
 }
+
+@media (max-width: 768px) {
+  .vision-mission-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
