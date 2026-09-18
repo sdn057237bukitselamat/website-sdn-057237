@@ -59,7 +59,7 @@ async function save(e){
   if(!gid)return msg('Silakan pilih guru/pegawai terlebih dahulu.',true);
   const {data:old,error:oe}=await supabase.from('attendance').select('id').eq('guru_id',gid).eq('tanggal',todayWib()).maybeSingle();
   if(oe)return msg(oe.message,true);
-  if(old&&state.profile.role!=='admin')return msg('Presensi hari ini sudah tercatat. Perubahan harus dilakukan administrator.',true);
+  if(old&&state.profile.role!=='admin')return msg('Presensi hari ini sudah tercatat. Presensi kedua ditolak oleh aturan satu presensi per guru per tanggal.',true);
   const payload={guru_id:gid,status,keterangan:note,created_by:state.user.id};
   const result=old?await supabase.from('attendance').update(payload).eq('id',old.id).select('id,waktu,guru:guru_id(nama)').single():await supabase.from('attendance').insert(payload).select('id,waktu,guru:guru_id(nama)').single();
   if(result.error)return msg(result.error.code==='23505'?'Presensi ganda ditolak oleh database.':result.error.message,true);
@@ -75,12 +75,26 @@ async function recap(){
   (data||[]).forEach(r=>{if(map[r.guru_id]){map[r.guru_id][r.status]++;map[r.guru_id].total++}});
   $('recapBody').innerHTML=Object.values(map).map(x=>'<tr><td><strong>'+esc(x.nama)+'</strong></td><td>'+x.hadir+'</td><td>'+x.izin+'</td><td>'+x.sakit+'</td><td>'+x.dinas+'</td><td><strong>'+x.total+'</strong></td></tr>').join('');
 }
+async function loadAdminAccounts(){
+  if(state.profile.role!=='admin')return;
+  const {data,error}=await supabase.from('profiles').select('id,email,nama,role,guru_id').order('email');
+  if(error)return msg('Data akun gagal dimuat: '+error.message,true);
+  const account=$('adminAccountSelect'), guru=$('adminGuruSelect'), rows=$('adminAccountRows');
+  if(!account||!guru||!rows)return;
+  const current=account.value;
+  account.innerHTML='<option value="">-- Pilih akun guru --</option>'+(data||[]).filter(x=>x.role!=='admin').map(x=>'<option value="'+esc(x.id)+'">'+esc(x.email)+(x.guru_id?' — '+esc((state.people.find(p=>p.id===x.guru_id)||{}).nama||x.guru_id):' — belum terhubung')+'</option>').join('');
+  if(current)account.value=current;
+  guru.innerHTML='<option value="">-- Pilih data guru --</option>'+state.people.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.nama)+' ('+esc(p.jabatan)+')</option>').join('');
+  const render=()=>{rows.innerHTML=(data||[]).map(x=>{const p=state.people.find(g=>g.id===x.guru_id);return '<tr><td>'+esc(x.email)+'</td><td>'+esc(x.role)+'</td><td>'+esc(p?.nama||'Belum terhubung')+'</td></tr>'}).join('')||'<tr><td colspan="3">Belum ada akun.</td></tr>';};
+  render();
+  $('btnLinkGuru').onclick=async()=>{const pid=account.value,gid=guru.value;if(!pid||!gid)return msg('Pilih akun dan data guru.',true);const {error:e}=await supabase.from('profiles').update({guru_id:gid,role:'guru',updated_at:new Date().toISOString()}).eq('id',pid);if(e)return msg('Gagal menghubungkan akun: '+e.message,true);msg('Akun guru berhasil dihubungkan.');await loadAdminAccounts();};
+}
 function adminUI(){
   const r=$('adminRecap');if(!r)return;
   if(state.profile.role!=='admin'){r.style.display='none';return}
   r.style.display=''; const month=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit'}).format(new Date());
-  r.innerHTML='<div class="contact-form" style="padding:24px"><div style="display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap"><div><h3 style="font-size:1.2rem;font-weight:800;color:var(--dark)">Rekap Bulanan</h3><div style="font-size:.85rem;color:var(--muted)">Khusus administrator.</div></div><div style="display:flex;gap:10px;align-items:end"><div><label class="form-label" for="recapMonth">Bulan</label><input id="recapMonth" type="month" class="form-control" value="'+month+'"></div><button id="btnLoadRecap" type="button" class="btn btn-primary">Tampilkan</button></div></div><div class="table-responsive" style="margin-top:18px"><table class="custom-table"><thead><tr><th>Nama</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Dinas</th><th>Total</th></tr></thead><tbody id="recapBody"></tbody></table></div></div>';
-  $('btnLoadRecap').addEventListener('click',recap);recap();
+  r.innerHTML='<div id="adminAccountManager" class="contact-form" style="padding:24px;margin-bottom:20px"><h3 style="font-size:1.2rem;font-weight:800;color:var(--dark)">Hubungkan Akun Guru</h3><p style="font-size:.85rem;color:var(--muted)">Pilih akun Auth yang sudah dibuat, lalu tautkan ke data guru yang sesuai.</p><div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end"><div><label class="form-label" for="adminAccountSelect">Akun</label><select id="adminAccountSelect" class="form-control"></select></div><div><label class="form-label" for="adminGuruSelect">Data Guru</label><select id="adminGuruSelect" class="form-control"></select></div><button id="btnLinkGuru" type="button" class="btn btn-primary">Hubungkan</button></div><div class="table-responsive" style="margin-top:16px"><table class="custom-table"><thead><tr><th>Email</th><th>Role</th><th>Guru Terhubung</th></tr></thead><tbody id="adminAccountRows"></tbody></table></div></div><div class="contact-form" style="padding:24px"><div style="display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap"><div><h3 style="font-size:1.2rem;font-weight:800;color:var(--dark)">Rekap Bulanan</h3><div style="font-size:.85rem;color:var(--muted)">Khusus administrator.</div></div><div style="display:flex;gap:10px;align-items:end"><div><label class="form-label" for="recapMonth">Bulan</label><input id="recapMonth" type="month" class="form-control" value="'+month+'"></div><button id="btnLoadRecap" type="button" class="btn btn-primary">Tampilkan</button></div></div><div class="table-responsive" style="margin-top:18px"><table class="custom-table"><thead><tr><th>Nama</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Dinas</th><th>Total</th></tr></thead><tbody id="recapBody"></tbody></table></div></div>';
+  $('btnLoadRecap').addEventListener('click',recap);recap();loadAdminAccounts();
 }
 function userBar(){
   const r=$('attendanceUserBar');if(!r)return;
