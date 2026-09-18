@@ -36,6 +36,8 @@ create table if not exists public.attendance (
 
 create index if not exists attendance_tanggal_idx on public.attendance(tanggal);
 create index if not exists attendance_guru_tanggal_idx on public.attendance(guru_id, tanggal desc);
+create index if not exists profiles_guru_id_idx on public.profiles(guru_id);
+create index if not exists attendance_created_by_idx on public.attendance(created_by);
 
 create or replace function private.is_admin()
 returns boolean
@@ -86,17 +88,17 @@ drop policy if exists "guru_authenticated_read" on public.guru;
 create policy "guru_authenticated_read" on public.guru for select to authenticated using (aktif = true);
 
 drop policy if exists "profiles_self_read" on public.profiles;
-create policy "profiles_self_read" on public.profiles for select to authenticated using (id = auth.uid());
-
 drop policy if exists "profiles_admin_read" on public.profiles;
-create policy "profiles_admin_read" on public.profiles for select to authenticated using (private.is_admin());
+create policy "profiles_self_or_admin_read" on public.profiles for select to authenticated
+using (id = (select auth.uid()) or (select private.is_admin()));
+
 
 drop policy if exists "attendance_self_or_admin_read" on public.attendance;
 create policy "attendance_self_or_admin_read" on public.attendance for select to authenticated using (private.is_admin() or guru_id = private.current_guru_id());
 
 drop policy if exists "attendance_self_or_admin_insert" on public.attendance;
 create policy "attendance_self_or_admin_insert" on public.attendance for insert to authenticated
-with check ((private.is_admin() or guru_id = private.current_guru_id()) and created_by = auth.uid());
+with check (((select private.is_admin()) or guru_id = (select private.current_guru_id())) and created_by = (select auth.uid()));
 
 drop policy if exists "attendance_self_or_admin_update" on public.attendance;
 create policy "attendance_self_or_admin_update" on public.attendance for update to authenticated
