@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - SDN 057237 Bukit Selamat</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="container admin-header-inner">
+      <a href="index.html" class="brand" aria-label="Kembali ke website">
+        <img src="images/logo.svg" alt="" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-name">SDN 057237 BUKIT SELAMAT</span>
+          <span class="brand-sub">Dashboard Administrator</span>
+        </div>
+      </a>
+      <div id="adminUserBar" class="admin-userbar" hidden></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="adminLogin" class="admin-section">
+      <div class="container admin-narrow">
+        <div class="admin-card admin-login-card">
+          <span class="section-tag">Akses Terlindungi</span>
+          <h1>Dashboard Admin</h1>
+          <p class="admin-muted">Masuk menggunakan akun administrator sekolah untuk mengelola foto galeri.</p>
+          <div id="adminLoginAlert" class="alert alert-danger" hidden></div>
+          <form id="adminLoginForm">
+            <label class="form-label" for="adminEmail">Email</label>
+            <input id="adminEmail" class="form-control" type="email" autocomplete="username" required>
+            <label class="form-label" for="adminPassword">Password</label>
+            <input id="adminPassword" class="form-control" type="password" autocomplete="current-password" required>
+            <button id="adminLoginButton" class="btn btn-primary admin-full-btn" type="submit">Masuk ke Dashboard</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="adminApp" class="admin-section" hidden>
+      <div class="container">
+        <div class="admin-page-heading">
+          <div>
+            <span class="section-tag">Manajemen Konten</span>
+            <h1>Galeri Foto</h1>
+            <p class="admin-muted">Upload dokumentasi kegiatan dan tampilkan otomatis di halaman galeri.</p>
+          </div>
+          <a class="btn btn-outline" href="galeri.html">Lihat Galeri Publik</a>
+        </div>
+
+        <div id="adminAlert" class="alert" hidden></div>
+
+        <div class="admin-grid">
+          <div class="admin-card">
+            <div class="admin-card-heading">
+              <div>
+                <h2>Upload Foto</h2>
+                <p class="admin-muted">JPG, PNG, atau WebP maksimal 6 MB.</p>
+              </div>
+            </div>
+            <form id="galleryUploadForm">
+              <label class="form-label" for="galleryFile">Foto *</label>
+              <input id="galleryFile" class="form-control" type="file" accept="image/jpeg,image/png,image/webp" required>
+
+              <label class="form-label" for="galleryTitle">Judul *</label>
+              <input id="galleryTitle" class="form-control" type="text" maxlength="160" placeholder="Contoh: Upacara Bendera Hari Senin" required>
+
+              <label class="form-label" for="galleryCategory">Kategori *</label>
+              <select id="galleryCategory" class="form-control" required>
+                <option value="upacara">Upacara</option>
+                <option value="kebugaran">Kebugaran & Senam</option>
+                <option value="pramuka">Pramuka</option>
+                <option value="belajar">Pembelajaran</option>
+                <option value="literasi">Literasi</option>
+                <option value="prestasi">Prestasi</option>
+                <option value="kegiatan" selected>Kegiatan</option>
+                <option value="lainnya">Lainnya</option>
+              </select>
+
+              <label class="form-label" for="galleryCaption">Keterangan</label>
+              <textarea id="galleryCaption" class="form-control" rows="4" maxlength="1000" placeholder="Keterangan singkat foto (opsional)"></textarea>
+
+              <button id="galleryUploadButton" class="btn btn-primary admin-full-btn" type="submit">
+                <span>Upload ke Galeri</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-heading">
+              <div>
+                <h2>Foto Terbaru</h2>
+                <p class="admin-muted">Foto aktif yang tersimpan di Supabase.</p>
+              </div>
+              <button id="refreshGalleryButton" class="btn btn-sm btn-outline" type="button">Muat Ulang</button>
+            </div>
+            <div id="galleryAdminList" class="admin-gallery-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/supabase-config.js"></script>
+  <script type="module" src="js/admin-gallery.js"></script>
+</body>
+</html>
