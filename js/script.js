@@ -11,10 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initFilterTabs();
   initSearch();
   initFaqAccordion();
-  initContactForm();
   initLiveClock();
   initGuruDirectory();
-  initAttendanceSystem();
+  initNewsDetails();
 });
 
 /* ==========================================================================
@@ -285,46 +284,7 @@ function initFaqAccordion() {
 /* ==========================================================================
    8. Formulir Kontak & Validasi
    ========================================================================== */
-function initContactForm() {
-  const form = document.querySelector('#schoolContactForm');
-  const alertBox = document.querySelector('#contactAlert');
-
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = form.querySelector('#senderName')?.value.trim();
-    const email = form.querySelector('#senderEmail')?.value.trim();
-    const subject = form.querySelector('#messageSubject')?.value.trim();
-    const message = form.querySelector('#senderMessage')?.value.trim();
-
-    if (!name || !email || !message) {
-      alert('Mohon lengkapi Nama, Email, dan Pesan Anda.');
-      return;
-    }
-
-    // Tampilkan notifikasi sukses simulasi
-    if (alertBox) {
-      alertBox.style.display = 'flex';
-      alertBox.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        <span>Terima kasih, <strong>${name}</strong>! Pesan Anda telah berhasil dikirim ke pihak SDN 057237 Bukit Selamat. Kami akan segera menghubungi Anda kembali melalui email <strong>${email}</strong>.</span>
-      `;
-      alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      alert(`Terima kasih, ${name}! Pesan Anda telah berhasil dikirim.`);
-    }
-
-    form.reset();
-  });
-}
-
-/* ==========================================================================
-   9. Live Digital Clock (Jam & Tanggal Real-time)
+/* ==========================================================================\n   8. Live Digital Clock (Jam & Tanggal Real-time)
    ========================================================================== */
 function initLiveClock() {
   const clockTime = document.getElementById('liveClockTime');
@@ -332,26 +292,30 @@ function initLiveClock() {
   if (!clockTime && !clockDate) return;
 
   const updateClock = () => {
-    const now = new Date();
-    
-    // Format WIB Time (HH:mm:ss)
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    if (clockTime) clockTime.textContent = `${hours}:${minutes}:${seconds} WIB`;
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Jakarta',
+      weekday: 'long',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).formatToParts(new Date());
 
-    // Format Indonesian Date (Hari, DD MMMM YYYY)
+    const get = type => parts.find(part => part.type === type)?.value || '';
+    if (clockTime) clockTime.textContent = `${get('hour')}:${get('minute')}:${get('second')} WIB`;
+
     if (clockDate) {
-      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-      const months = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-      ];
-      const dayName = days[now.getDay()];
-      const day = now.getDate();
-      const monthName = months[now.getMonth()];
-      const year = now.getFullYear();
-      clockDate.textContent = `${dayName}, ${day} ${monthName} ${year}`;
+      const date = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }).format(new Date());
+      clockDate.textContent = date;
     }
   };
 
@@ -359,265 +323,7 @@ function initLiveClock() {
   setInterval(updateClock, 1000);
 }
 
-/* ==========================================================================
-   10. Sistem Absensi Guru & Pegawai
-   ========================================================================== */
-// Data master guru/pegawai dimuat dari data/guru.json agar guru.html dan absensi
-// menggunakan satu sumber data. NIP/NUPTK tidak disimpan pada data publik.
-let DAFTAR_GURU_PEGAWAI = [];
-
-async function initAttendanceSystem() {
-  const form = document.getElementById('formAbsensi');
-  const pegawaiSelect = document.getElementById('pegawaiSelect');
-  const nipInput = document.getElementById('nipInput');
-  const jabatanInput = document.getElementById('jabatanInput');
-  const tableBody = document.getElementById('tabelAbsensiBody');
-  const filterBtns = document.querySelectorAll('.filter-btn-absensi');
-  const printBtn = document.getElementById('btnCetakAbsensi');
-  const resetBtn = document.getElementById('btnResetAbsensi');
-  const alertBox = document.getElementById('absensiAlert');
-
-  if (!tableBody) return; // Not on absensi page
-
-  // Load the single source of truth.
-  try {
-    const response = await fetch('data/guru.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const master = await response.json();
-    DAFTAR_GURU_PEGAWAI = Array.isArray(master.people) ? master.people : [];
-  } catch (err) {
-    console.error('Gagal memuat data master guru:', err);
-    if (alertBox) {
-      alertBox.style.display = 'flex';
-      alertBox.classList.remove('alert-success');
-      alertBox.textContent = 'Data guru/pegawai tidak dapat dimuat. Silakan coba lagi.';
-    }
-    if (pegawaiSelect) pegawaiSelect.disabled = true;
-    return;
-  }
-
-  // Populate Dropdown
-  if (pegawaiSelect) {
-    DAFTAR_GURU_PEGAWAI.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = `${p.nama} (${p.jabatan})`;
-      pegawaiSelect.appendChild(opt);
-    });
-
-    pegawaiSelect.addEventListener('change', () => {
-      const selected = DAFTAR_GURU_PEGAWAI.find(p => p.id === pegawaiSelect.value);
-      if (selected) {
-        if (jabatanInput) jabatanInput.value = selected.jabatan;
-      } else {
-        if (nipInput) nipInput.value = '';
-        if (jabatanInput) jabatanInput.value = '';
-      }
-    });
-  }
-
-  // Versioned storage key prevents stale demo records from being mixed
-  // with the current school master data.
-  const storageKey = 'sdn057237_absensi_data_v2';
-  const todayKey = new Date().toISOString().slice(0, 10);
-  let absensiRecords = [];
-  try {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) absensiRecords = JSON.parse(saved);
-    if (!Array.isArray(absensiRecords)) absensiRecords = [];
-    absensiRecords = absensiRecords.filter(record => record.tanggal === todayKey);
-  } catch (err) {
-    console.warn('LocalStorage error:', err);
-    absensiRecords = [];
-  }
-
-  function saveToStorage(data) {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(data));
-    } catch (err) {
-      console.warn('LocalStorage save error:', err);
-    }
-  }
-
-  // Render Table & Counters
-  function renderTable(filter = 'all') {
-    tableBody.innerHTML = '';
-
-    const filtered = absensiRecords.filter(item => {
-      if (filter === 'all') return true;
-      return item.status === filter;
-    });
-
-    if (filtered.length === 0) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td colspan="6" style="text-align: center; padding: 24px; color: var(--muted);">Belum ada data absensi untuk kategori ini.</td>`;
-      tableBody.appendChild(tr);
-    } else {
-      filtered.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        
-        let badgeClass = 'badge-status-hadir';
-        let badgeLabel = 'Hadir Tepat Waktu';
-        if (item.status === 'izin') {
-          badgeClass = 'badge-status-izin';
-          badgeLabel = 'Izin Resmi';
-        } else if (item.status === 'sakit') {
-          badgeClass = 'badge-status-sakit';
-          badgeLabel = 'Sakit';
-        } else if (item.status === 'dinas') {
-          badgeClass = 'badge-status-dinas';
-          badgeLabel = 'Dinas Luar';
-        }
-
-        tr.innerHTML = `
-          <td><strong>${index + 1}</strong></td>
-          <td><span style="font-weight: 700; color: var(--primary);">${item.waktu}</span></td>
-          <td>
-            <div style="font-weight: 700; color: var(--dark);">${item.nama}</div>
-          </td>
-          <td>${item.jabatan}</td>
-          <td><span class="badge-status ${badgeClass}">${badgeLabel}</span></td>
-          <td style="font-size: 0.9rem;">${item.keterangan || '-'}</td>
-        `;
-        tableBody.appendChild(tr);
-      });
-    }
-
-    updateCounterCards();
-  }
-
-  function updateCounterCards() {
-    const totalStaff = DAFTAR_GURU_PEGAWAI.length;
-    let hadirCount = 0;
-    let izinCount = 0;
-    let sakitCount = 0;
-    let dinasCount = 0;
-
-    absensiRecords.forEach(item => {
-      if (item.status === 'hadir') hadirCount++;
-      else if (item.status === 'izin') izinCount++;
-      else if (item.status === 'sakit') sakitCount++;
-      else if (item.status === 'dinas') dinasCount++;
-    });
-
-    const recordedTotal = absensiRecords.length;
-    const belumAbsen = Math.max(0, totalStaff - recordedTotal);
-
-    const cTotal = document.getElementById('statAbsenTotal');
-    const cHadir = document.getElementById('statAbsenHadir');
-    const cIzinSakit = document.getElementById('statAbsenIzinSakit');
-    const cDinas = document.getElementById('statAbsenDinas');
-    const cBelum = document.getElementById('statAbsenBelum');
-
-    if (cTotal) cTotal.textContent = totalStaff;
-    if (cHadir) cHadir.textContent = hadirCount;
-    if (cIzinSakit) cIzinSakit.textContent = (izinCount + sakitCount);
-    if (cDinas) cDinas.textContent = dinasCount;
-    if (cBelum) cBelum.textContent = belumAbsen;
-  }
-
-  // Handle Form Submit
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const pId = pegawaiSelect?.value;
-      const status = document.getElementById('statusAbsenSelect')?.value || 'hadir';
-      const keterangan = document.getElementById('keteranganAbsen')?.value.trim() || '-';
-
-      if (!pId) {
-        alert('Silakan pilih nama guru atau pegawai terlebih dahulu.');
-        return;
-      }
-
-      const pegawai = DAFTAR_GURU_PEGAWAI.find(p => p.id === pId);
-      if (!pegawai) return;
-
-      // Check if already checked in today
-      const alreadyCheckedIndex = absensiRecords.findIndex(r => r.tanggal === todayKey && r.nama === pegawai.nama);
-      
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const waktuStr = `${hours}.${minutes} WIB`;
-
-      const newRecord = {
-        tanggal: todayKey,
-        nama: pegawai.nama,
-        jabatan: pegawai.jabatan,
-        waktu: waktuStr,
-        status: status,
-        keterangan: keterangan
-      };
-
-      if (alreadyCheckedIndex >= 0) {
-        // Update existing entry
-        absensiRecords[alreadyCheckedIndex] = newRecord;
-      } else {
-        // Add to beginning of array
-        absensiRecords.unshift(newRecord);
-      }
-
-      saveToStorage(absensiRecords);
-      renderTable();
-
-      // Show alert
-      if (alertBox) {
-        alertBox.style.display = 'flex';
-        alertBox.innerHTML = `
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span>Presensi untuk <strong>${pegawai.nama}</strong> (${pegawai.jabatan}) berhasil tercatat pada pukul <strong>${waktuStr}</strong> dengan status <strong>${status.toUpperCase()}</strong>!</span>
-        `;
-        alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-
-      // Reset selection
-      pegawaiSelect.value = '';
-      if (nipInput) nipInput.value = '';
-      if (jabatanInput) jabatanInput.value = '';
-      if (document.getElementById('keteranganAbsen')) document.getElementById('keteranganAbsen').value = '';
-    });
-  }
-
-  // Handle Filter Buttons
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const f = btn.getAttribute('data-filter');
-      renderTable(f);
-    });
-  });
-
-  // Handle Print Button
-  if (printBtn) {
-    printBtn.addEventListener('click', () => {
-      window.print();
-    });
-  }
-
-  // Handle Reset Button
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      if (confirm('Apakah Anda yakin ingin mereset seluruh data absensi hari ini?')) {
-        absensiRecords = [];
-        saveToStorage([]);
-        renderTable();
-        if (alertBox) {
-          alertBox.style.display = 'flex';
-          alertBox.innerHTML = `<span>Data absensi hari ini telah berhasil direset.</span>`;
-        }
-      }
-    });
-  }
-
-  // Initial render
-  renderTable();
-}/* ==========================================================================
-   5. Direktori Guru & Tenaga Kependidikan
+/* ==========================================================================\n   9. Direktori Guru & Tenaga Kependidikan
    ========================================================================== */
 async function initGuruDirectory() {
   const grid = document.getElementById('guruGrid');
@@ -659,4 +365,93 @@ async function initGuruDirectory() {
   }
 }
 
+
+
+
+/* ==========================================================================
+   10. Berita Detail
+   ========================================================================== */
+function initNewsDetails() {
+  const links = document.querySelectorAll('.js-news-detail');
+  const dialog = document.getElementById('newsDetailDialog');
+  if (!dialog || !links.length) return;
+
+  const data = {
+    'o2sn': {
+      category: 'Prestasi',
+      date: '12 September 2026',
+      author: 'Admin Sekolah',
+      title: 'Siswa SDN 057237 Raih Juara Pada Ajang O2SN Tingkat Kecamatan Besitang',
+      image: 'images/berita-1.svg',
+      body: 'Kabar gembira datang dari kontingen olahraga SDN 057237 Bukit Selamat yang berhasil meraih juara 1 lari cepat 60 meter dan juara 2 bulutangkis tunggal putra pada Olimpiade Olahraga Siswa Nasional (O2SN) tingkat Kecamatan Besitang. Pihak sekolah menyampaikan apresiasi kepada siswa dan guru pembimbing atas kerja keras selama proses latihan dan seleksi.'
+    },
+    'p5': {
+      category: 'Kegiatan',
+      date: '05 September 2026',
+      author: 'Tim P5',
+      title: 'Gelar Karya P5: Menggali Kreativitas Siswa dari Bahan Daur Ulang Alami',
+      image: 'images/berita-2.svg',
+      body: 'Dengan mengusung tema Gaya Hidup Berkelanjutan, siswa kelas 1 hingga 6 memamerkan aneka hasil kreasi dari pelepah pisang, botol plastik bekas, dan bahan alami. Kegiatan melibatkan orang tua siswa, komite sekolah, serta pengawas pendidikan dan menjadi ruang bagi siswa untuk menampilkan kreativitas serta rasa percaya diri.'
+    },
+    'persami': {
+      category: 'Kegiatan',
+      date: '30 Agustus 2026',
+      author: 'Pembina Pramuka',
+      title: 'Perkemahan Sabtu-Minggu (Persami) Pramuka Siaga Berlangsung Meriah',
+      image: 'images/berita-3.svg',
+      body: 'Kegiatan Persami Gugus Depan SDN 057237 Bukit Selamat diisi dengan uji keterampilan tanda jejak, semaphore, api unggun ceria, serta bakti sosial kebersihan di lingkungan Desa Bukit Selamat. Para peserta mengikuti kegiatan dengan antusias dan belajar bekerja sama antarregu.'
+    },
+    'anbk': {
+      category: 'Akademik',
+      date: '24 Agustus 2026',
+      author: 'Proktor ANBK',
+      title: 'Gladi Bersih Asesmen Nasional (ANBK) Siswa Kelas V Berjalan Lancar',
+      image: 'images/berita-4.svg',
+      body: 'Sebanyak 30 siswa kelas 5 mengikuti simulasi gladi bersih ANBK dengan fokus pada instrumen Asesmen Kompetensi Minimum Literasi dan Numerasi serta Survei Lingkungan Belajar. Pelaksanaan berlangsung tertib dengan dukungan perangkat komputer dan koneksi jaringan sekolah.'
+    },
+    'asts': {
+      category: 'Pengumuman',
+      date: '18 Agustus 2026',
+      author: 'Kurikulum',
+      title: 'Pengumuman Jadwal Asesmen Sumatif Tengah Semester (ASTS) Ganjil',
+      image: 'images/berita-2.svg',
+      body: 'Pelaksanaan ASTS Ganjil ditujukan bagi siswa kelas 1 sampai kelas 6. Jadwal ujian tertulis dan portofolio telah dibagikan melalui grup kelas masing-masing. Orang tua dan wali siswa diharapkan mendampingi persiapan belajar dan memastikan siswa hadir tepat waktu.'
+    },
+    'buku': {
+      category: 'Akademik',
+      date: '10 Agustus 2026',
+      author: 'Perpustakaan',
+      title: 'Distribusi Buku Pelajaran Kurikulum Merdeka Gratis Untuk Seluruh Siswa',
+      image: 'images/berita-1.svg',
+      body: 'Perpustakaan SDN 057237 Bukit Selamat telah menyalurkan buku pegangan siswa terbitan Kemendikbudristek yang bersumber dari alokasi dana Bantuan Operasional Satuan Pendidikan. Buku dipinjamkan selama satu tahun pelajaran dan siswa diharapkan menjaganya dengan baik.'
+    }
+  };
+
+  const close = () => {
+    if (typeof dialog.close === 'function') dialog.close();
+    else dialog.removeAttribute('open');
+  };
+
+  const render = article => {
+    if (!article) return;
+    dialog.querySelector('.news-detail-image').src = article.image;
+    dialog.querySelector('.news-detail-image').alt = article.title;
+    dialog.querySelector('.news-detail-category').textContent = article.category;
+    dialog.querySelector('.news-detail-meta').textContent = `${article.date} • ${article.author}`;
+    dialog.querySelector('.news-detail-title').textContent = article.title;
+    dialog.querySelector('.news-detail-body').textContent = article.body;
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+  };
+
+  links.forEach(link => link.addEventListener('click', event => {
+    event.preventDefault();
+    render(data[link.dataset.newsId]);
+  }));
+
+  dialog.querySelectorAll('[data-news-close]').forEach(btn => btn.addEventListener('click', close));
+  dialog.addEventListener('click', event => {
+    if (event.target === dialog) close();
+  });
+}
 
