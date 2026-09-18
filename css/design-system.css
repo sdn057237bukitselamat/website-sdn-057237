@@ -486,3 +486,36 @@ body {
   .news-detail-content { padding: 30px 22px 24px; }
 }
 
+
+/* ==========================================================================
+   MOBILE OVERFLOW HARDENING
+   ========================================================================== */
+html,
+body {
+  overflow-x: clip;
+}
+.contact-info-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.contact-info-item > div:last-child,
+.contact-detail-val {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.news-layout {
+  min-width: 0;
+}
+@media (max-width: 768px) {
+  .news-layout {
+    grid-template-columns: 1fr !important;
+    width: 100%;
+  }
+  .guru-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
