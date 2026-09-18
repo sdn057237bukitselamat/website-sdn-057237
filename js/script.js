@@ -408,11 +408,13 @@ async function initAttendanceSystem() {
   // Versioned storage key prevents stale demo records from being mixed
   // with the current school master data.
   const storageKey = 'sdn057237_absensi_data_v2';
+  const todayKey = new Date().toISOString().slice(0, 10);
   let absensiRecords = [];
   try {
     const saved = localStorage.getItem(storageKey);
     if (saved) absensiRecords = JSON.parse(saved);
     if (!Array.isArray(absensiRecords)) absensiRecords = [];
+    absensiRecords = absensiRecords.filter(record => record.tanggal === todayKey);
   } catch (err) {
     console.warn('LocalStorage error:', err);
     absensiRecords = [];
@@ -521,7 +523,7 @@ async function initAttendanceSystem() {
       if (!pegawai) return;
 
       // Check if already checked in today
-      const alreadyCheckedIndex = absensiRecords.findIndex(r => r.nama === pegawai.nama);
+      const alreadyCheckedIndex = absensiRecords.findIndex(r => r.tanggal === todayKey && r.nama === pegawai.nama);
       
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -529,6 +531,7 @@ async function initAttendanceSystem() {
       const waktuStr = `${hours}.${minutes} WIB`;
 
       const newRecord = {
+        tanggal: todayKey,
         nama: pegawai.nama,
         jabatan: pegawai.jabatan,
         waktu: waktuStr,
