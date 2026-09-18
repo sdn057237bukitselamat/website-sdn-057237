@@ -139,13 +139,19 @@ function initStatCounters() {
    4. Galeri Lightbox (Modal Perbesar Gambar)
    ========================================================================== */
 function initGalleryLightbox() {
-  const galleryItems = document.querySelectorAll('.gallery-item');
+  const gallery = document.querySelector('.gallery-grid');
   const lightbox = document.querySelector('.lightbox');
-  if (!lightbox) return;
+  if (!gallery || !lightbox) return;
 
   const lightboxImg = lightbox.querySelector('.lightbox-img');
   const lightboxCaption = lightbox.querySelector('.lightbox-caption');
   const closeBtn = lightbox.querySelector('.lightbox-close');
+
+  const prepareItem = item => {
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', item.querySelector('img')?.alt || 'Buka gambar galeri');
+  };
 
   const openLightbox = (item) => {
     const img = item.querySelector('img');
@@ -159,17 +165,17 @@ function initGalleryLightbox() {
     document.body.style.overflow = 'hidden';
   };
 
-  galleryItems.forEach(item => {
-    item.setAttribute('tabindex', '0');
-    item.setAttribute('role', 'button');
-    item.setAttribute('aria-label', item.querySelector('img')?.alt || 'Buka gambar galeri');
-    item.addEventListener('click', () => openLightbox(item));
-    item.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openLightbox(item);
-      }
-    });
+  gallery.querySelectorAll('.gallery-item').forEach(prepareItem);
+  gallery.addEventListener('click', e => {
+    const item = e.target.closest('.gallery-item');
+    if (item && gallery.contains(item)) openLightbox(item);
+  });
+  gallery.addEventListener('keydown', e => {
+    const item = e.target.closest('.gallery-item');
+    if (item && gallery.contains(item) && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      openLightbox(item);
+    }
   });
 
   const closeLightbox = () => {
@@ -179,17 +185,12 @@ function initGalleryLightbox() {
 
   if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
 
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-      closeLightbox();
-    }
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeLightbox();
   });
 
-  // ESC key to close
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-      closeLightbox();
-    }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
   });
 }
 
