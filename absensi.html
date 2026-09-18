@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presensi Guru &amp; Pegawai - SDN 057237 Bukit Selamat</title>
+  <meta name="description" content="Sistem absensi dan presensi harian dewan guru dan tenaga kependidikan SDN 057237 Bukit Selamat, Besitang, Langkat.">
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="container topbar-wrapper">
+      <div class="topbar-info">
+        <span class="topbar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Jl. Medan–Banda Aceh Km. 106, Desa Bukit Selamat, Besitang, Langkat
+        </span>
+        <span class="topbar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <a href="mailto:sdn057237bukitselamat@gmail.com">sdn057237bukitselamat@gmail.com</a>
+        </span>
+      </div>
+      <div class="topbar-badge">
+        <span>NPSN: 10200867</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Navigasi -->
+  <header class="header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand" title="SDN 057237 Bukit Selamat">
+        <img src="images/logo.svg" alt="Logo SDN 057237 Bukit Selamat" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-name">SDN 057237 BUKIT SELAMAT</span>
+          <span class="brand-sub">Kec. Besitang, Kab. Langkat, Sumatera Utara</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html" class="nav-link">Beranda</a>
+        <a href="profil.html" class="nav-link">Profil Sekolah</a>
+        <a href="guru.html" class="nav-link">Guru &amp; Tendik</a>
+        <a href="siswa.html" class="nav-link">Data Siswa</a>
+        <a href="absensi.html" class="nav-link active">Absensi</a>
+        <a href="berita.html" class="nav-link">Berita</a>
+        <a href="galeri.html" class="nav-link">Galeri</a>
+        <a href="fasilitas.html" class="nav-link">Fasilitas</a>
+        <a href="kontak.html" class="nav-link">Kontak</a>
+        <div class="nav-cta">
+          <a href="kontak.html" class="btn btn-primary btn-sm">Hubungi Kami</a>
+        </div>
+      </nav>
+
+      <button class="nav-toggle" aria-label="Buka Menu Navigasi">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Header Banner -->
+    <section class="page-header">
+      <div class="container page-header-content">
+        <div class="breadcrumbs">
+          <a href="index.html">Beranda</a>
+          <span>/</span>
+          <span>Presensi Guru &amp; Pegawai</span>
+        </div>
+        <h1 class="page-header-title">Presensi Guru &amp; Tenaga Kependidikan</h1>
+        <p class="page-header-subtitle">Sistem pencatatan kehadiran dan rekapitulasi harian dewan guru dan staf SDN 057237 Bukit Selamat.</p>
+      </div>
+    </section>
+
+    <!-- Jam Digital & Ringkasan Kehadiran Hari Ini -->
+    <section class="section-sm bg-light">
+      <div class="container">
+        
+        <!-- Live Clock Widget -->
+        <div class="clock-widget">
+          <div class="clock-info-group">
+            <div class="clock-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div>
+              <div class="clock-date-text" id="liveClockDate">Memuat Tanggal...</div>
+              <div class="clock-day-sub">Tahun Ajaran Aktif • Jam Kerja Resmi 07.30 - 13.00 WIB</div>
+            </div>
+          </div>
+          <div class="clock-time-display" id="liveClockTime">00:00:00 WIB</div>
+        </div>
+
+        <!-- Ringkasan Statistik Live -->
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <!-- Total Pegawai -->
+          <div class="stat-card" style="padding: 20px;">
+            <div class="stat-icon icon-blue" style="width: 44px; height: 44px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="statAbsenTotal" style="font-size: 1.6rem;">14</span>
+              <span class="stat-label" style="font-size: 0.8rem;">Total Pegawai</span>
+            </div>
+          </div>
+
+          <!-- Hadir -->
+          <div class="stat-card" style="padding: 20px;">
+            <div class="stat-icon icon-green" style="width: 44px; height: 44px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="statAbsenHadir" style="font-size: 1.6rem; color: #15803d;">0</span>
+              <span class="stat-label" style="font-size: 0.8rem;">Hadir Tepat Waktu</span>
+            </div>
+          </div>
+
+          <!-- Izin / Sakit -->
+          <div class="stat-card" style="padding: 20px;">
+            <div class="stat-icon icon-amber" style="width: 44px; height: 44px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="statAbsenIzinSakit" style="font-size: 1.6rem; color: #b45309;">0</span>
+              <span class="stat-label" style="font-size: 0.8rem;">Izin / Sakit</span>
+            </div>
+          </div>
+
+          <!-- Dinas Luar -->
+          <div class="stat-card" style="padding: 20px;">
+            <div class="stat-icon" style="width: 44px; height: 44px; background: rgba(126, 34, 206, 0.1); color: #7e22ce;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="statAbsenDinas" style="font-size: 1.6rem; color: #7e22ce;">0</span>
+              <span class="stat-label" style="font-size: 0.8rem;">Dinas Luar</span>
+            </div>
+          </div>
+
+          <!-- Belum Absen -->
+          <div class="stat-card" style="padding: 20px;">
+            <div class="stat-icon" style="width: 44px; height: 44px; background: rgba(239, 68, 68, 0.1); color: #dc2626;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-number" id="statAbsenBelum" style="font-size: 1.6rem; color: #dc2626;">0</span>
+              <span class="stat-label" style="font-size: 0.8rem;">Belum Presensi</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Formulir Presensi & Tabel Log Harian -->
+    <section class="section bg-white">
+      <div class="container">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1.8fr; gap: 40px; align-items: start;">
+          
+          <!-- Kolom Formulir Input Presensi -->
+          <div class="contact-form" style="padding: 30px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+              <div class="stat-icon icon-blue" style="width: 38px; height: 38px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              </div>
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--dark);">Formulir Presensi</h3>
+                <div style="font-size: 0.82rem; color: var(--muted);">Check-in Kehadiran Guru &amp; Pegawai</div>
+              </div>
+            </div>
+
+            <!-- Banner Notifikasi Sukses Presensi -->
+            <div id="absensiAlert" class="alert alert-success" style="display: none; font-size: 0.88rem;"></div>
+
+            <form id="formAbsensi">
+              <div class="form-group">
+                <label for="pegawaiSelect" class="form-label">Pilih Guru / Pegawai *</label>
+                <select id="pegawaiSelect" class="form-control" required>
+                  <option value="">-- Pilih Nama Pendidik / Tendik --</option>
+                  <!-- Diisi otomatis oleh JavaScript -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="nipInput" class="form-label">NIP / NUPTK</label>
+                <input type="text" id="nipInput" class="form-control" placeholder="NIP otomatis terisi" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
+              </div>
+
+              <div class="form-group">
+                <label for="jabatanInput" class="form-label">Jabatan / Tugas Mengajar</label>
+                <input type="text" id="jabatanInput" class="form-control" placeholder="Jabatan otomatis terisi" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
+              </div>
+
+              <div class="form-group">
+                <label for="statusAbsenSelect" class="form-label">Status Kehadiran *</label>
+                <select id="statusAbsenSelect" class="form-control" required>
+                  <option value="hadir">Hadir di Sekolah</option>
+                  <option value="izin">Izin (Keperluan Resmi/Keluarga)</option>
+                  <option value="sakit">Sakit (Keterangan Dokter/Surat)</option>
+                  <option value="dinas">Dinas Luar / Pelatihan KKG</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="keteranganAbsen" class="form-label">Keterangan / Aktivitas Hari Ini</label>
+                <input type="text" id="keteranganAbsen" class="form-control" placeholder="Contoh: Mengajar Tematik Kelas I, Piket Pagi, dll.">
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Kirim &amp; Catat Presensi</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Kolom Log Data Presensi Harian -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+              <div>
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark);">Log Kehadiran Hari Ini</h3>
+                <div style="font-size: 0.85rem; color: var(--muted);">Data tersimpan otomatis di perangkat dan dapat dicetak sebagai laporan resmi.</div>
+              </div>
+
+              <div style="display: flex; gap: 10px;">
+                <button type="button" id="btnCetakAbsensi" class="btn btn-sm btn-print" title="Cetak Rekap Presensi">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                  <span>Cetak / PDF</span>
+                </button>
+                <button type="button" id="btnResetAbsensi" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5;" title="Reset Data">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                  <span>Reset</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter Tabs Status -->
+            <div class="filter-tabs" style="justify-content: flex-start; margin-bottom: 20px;">
+              <button class="filter-btn filter-btn-absensi active" data-filter="all">Semua Data</button>
+              <button class="filter-btn filter-btn-absensi" data-filter="hadir">Hadir</button>
+              <button class="filter-btn filter-btn-absensi" data-filter="izin">Izin</button>
+              <button class="filter-btn filter-btn-absensi" data-filter="sakit">Sakit</button>
+              <button class="filter-btn filter-btn-absensi" data-filter="dinas">Dinas Luar</button>
+            </div>
+
+            <!-- Tabel Log Kehadiran -->
+            <div class="table-responsive">
+              <table class="custom-table" id="tabelAbsensi">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">No</th>
+                    <th>Waktu</th>
+                    <th>Nama Guru / Pegawai</th>
+                    <th>Jabatan</th>
+                    <th>Status</th>
+                    <th>Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelAbsensiBody">
+                  <!-- Diisi secara dinamis oleh JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Panduan & Ketentuan Jam Presensi -->
+    <section class="section-sm bg-light">
+      <div class="container">
+        <div class="section-header" style="margin-bottom: 30px;">
+          <span class="section-tag">Ketentuan Presensi</span>
+          <h2 class="section-title">Tata Tertib Kehadiran Pendidik &amp; Tendik</h2>
+          <p class="section-desc">Pedoman kedisiplinan kerja dan pelaporan presensi di SDN 057237 Bukit Selamat.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          <div class="info-card">
+            <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--primary); margin-bottom: 10px;">1. Jam Masuk &amp; Pembiasaan Pagi</h4>
+            <p style="font-size: 0.9rem; color: var(--dark-soft); line-height: 1.6;">
+              Batas waktu kehadiran di sekolah adalah pukul <strong>07.15 WIB</strong>. Pendidik bersiap menyambut kedatangan peserta didik di gerbang sekolah dan mendampingi pembiasaan pagi (senam, literasi, atau upacara).
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--secondary); margin-bottom: 10px;">2. Pengajuan Izin &amp; Sakit</h4>
+            <p style="font-size: 0.9rem; color: var(--dark-soft); line-height: 1.6;">
+              Pendidik atau tenaga kependidikan yang berhalangan hadir wajib memberitahukan kepada Kepala Sekolah dan mengisi keterangan pada sistem presensi disertai surat izin tertulis atau surat keterangan dokter.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--accent); margin-bottom: 10px;">3. Penugasan Dinas Luar</h4>
+            <p style="font-size: 0.9rem; color: var(--dark-soft); line-height: 1.6;">
+              Kehadiran pada kegiatan Kelompok Kerja Guru (KKG), bimbingan teknis Kurikulum Merdeka, atau urusan dinas ke Dinas Pendidikan Kabupaten Langkat dicatat dengan status <strong>Dinas Luar</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-brand-header">
+            <img src="images/logo.svg" alt="Logo SDN 057237 Bukit Selamat" class="footer-brand-logo">
+            <div class="footer-brand-name">SDN 057237 BUKIT SELAMAT</div>
+          </div>
+          <p class="footer-desc">
+            Sekolah Dasar Negeri yang mengedepankan pembentukan budi pekerti luhur, penguasaan literasi-numerasi, serta karakter Pelajar Pancasila di Desa Bukit Selamat, Besitang, Langkat.
+          </p>
+          <div class="footer-npsn-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            <span>NPSN: 10200867</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Navigasi Cepat</h4>
+          <ul class="footer-links">
+            <li><a href="index.html" class="footer-link">Beranda</a></li>
+            <li><a href="profil.html" class="footer-link">Profil Sekolah</a></li>
+            <li><a href="guru.html" class="footer-link">Guru &amp; Tenaga Pendidik</a></li>
+            <li><a href="siswa.html" class="footer-link">Data Siswa</a></li>
+            <li><a href="absensi.html" class="footer-link">Presensi Guru &amp; Pegawai</a></li>
+            <li><a href="fasilitas.html" class="footer-link">Fasilitas Sekolah</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Informasi</h4>
+          <ul class="footer-links">
+            <li><a href="berita.html" class="footer-link">Berita Terkini</a></li>
+            <li><a href="berita.html" class="footer-link">Pengumuman Sekolah</a></li>
+            <li><a href="galeri.html" class="footer-link">Galeri Foto</a></li>
+            <li><a href="kontak.html" class="footer-link">Lokasi &amp; Peta</a></li>
+            <li><a href="kontak.html" class="footer-link">Kirim Pesan &amp; Aspirasi</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Kontak Sekolah</h4>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span>Jl. Medan–Banda Aceh Km. 106, Desa Bukit Selamat, Kec. Besitang, Kab. Langkat, Sumatera Utara 20859</span>
+            </div>
+            <div class="footer-contact-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>sdn057237bukitselamat@gmail.com</span>
+            </div>
+            <div class="footer-contact-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Senin - Sabtu: 07.30 - 13.00 WIB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 <strong>SDN 057237 Bukit Selamat</strong>. Seluruh hak cipta dilindungi undang-undang.
+        </div>
+        <div>
+          Dikelola oleh Tim Publikasi &amp; IT SDN 057237 Bukit Selamat
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" aria-label="Kembali ke atas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

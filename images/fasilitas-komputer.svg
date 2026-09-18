@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgComp" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" rx="12" fill="url(#bgComp)"/>
+  <polygon points="0,260 400,260 400,210 0,210" fill="#cbd5e1"/>
+  <!-- Long Computer Desk -->
+  <rect x="30" y="160" width="340" height="60" rx="4" fill="#334155"/>
+  <polygon points="20,160 380,160 390,172 10,172" fill="#475569"/>
+  <!-- Computer 1 (Left) -->
+  <rect x="50" y="80" width="80" height="60" rx="4" fill="#1e293b"/>
+  <rect x="55" y="85" width="70" height="48" rx="2" fill="#0284c7"/>
+  <polygon points="70,105 105,105 85,120" fill="#38bdf8"/>
+  <rect x="83" y="140" width="14" height="22" fill="#64748b"/>
+  <rect x="73" y="158" width="34" height="4" rx="2" fill="#475569"/>
+  <!-- Keyboard 1 -->
+  <polygon points="52,175 128,175 132,185 48,185" fill="#94a3b8"/>
+  <!-- Mouse 1 -->
+  <ellipse cx="145" cy="180" rx="6" ry="4" fill="#64748b"/>
+  <!-- Computer 2 (Center) -->
+  <rect x="160" y="80" width="80" height="60" rx="4" fill="#1e293b"/>
+  <rect x="165" y="85" width="70" height="48" rx="2" fill="#10b981"/>
+  <rect x="193" y="140" width="14" height="22" fill="#64748b"/>
+  <rect x="183" y="158" width="34" height="4" rx="2" fill="#475569"/>
+  <!-- Keyboard 2 -->
+  <polygon points="162,175 238,175 242,185 158,185" fill="#94a3b8"/>
+  <!-- Mouse 2 -->
+  <ellipse cx="255" cy="180" rx="6" ry="4" fill="#64748b"/>
+  <!-- Computer 3 (Right) -->
+  <rect x="270" y="80" width="80" height="60" rx="4" fill="#1e293b"/>
+  <rect x="275" y="85" width="70" height="48" rx="2" fill="#f59e0b"/>
+  <rect x="303" y="140" width="14" height="22" fill="#64748b"/>
+  <rect x="293" y="158" width="34" height="4" rx="2" fill="#475569"/>
+  <!-- Keyboard 3 -->
+  <polygon points="272,175 348,175 352,185 268,185" fill="#94a3b8"/>
+  <!-- Title Badge -->
+  <text x="200" y="45" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Laboratorium Komputer &amp; TIK</text>
+  <text x="200" y="65" font-family="'Segoe UI', sans-serif" font-size="11" fill="#475569" text-anchor="middle">Fasilitas Pembelajaran Digital &amp; ANBK</text>
+</svg>

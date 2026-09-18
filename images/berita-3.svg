@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="n3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="320" rx="12" fill="url(#n3Grad)"/>
+  <!-- Scout Camp / Tent & Bonfire -->
+  <g transform="translate(160, 45)">
+    <!-- Tent -->
+    <polygon points="40,140 100,50 160,140" fill="#fef3c7" stroke="#78350f" stroke-width="3"/>
+    <polygon points="100,50 160,140 135,140 100,60" fill="#fde68a"/>
+    <line x1="100" y1="50" x2="100" y2="140" stroke="#78350f" stroke-width="2"/>
+    <!-- Bonfire Logs -->
+    <line x1="20" y1="135" x2="45" y2="145" stroke="#451a03" stroke-width="6" stroke-linecap="round"/>
+    <line x1="45" y1="135" x2="20" y2="145" stroke="#451a03" stroke-width="6" stroke-linecap="round"/>
+    <!-- Bonfire Flame -->
+    <path d="M 32 140 C 25 125 22 110 32 100 C 42 110 39 125 32 140 Z" fill="#ef4444"/>
+    <path d="M 32 138 C 28 128 26 118 32 110 C 38 118 36 128 32 138 Z" fill="#fbbf24"/>
+  </g>
+  <rect x="0" y="240" width="500" height="80" fill="#451a03" opacity="0.9"/>
+  <text x="250" y="272" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="bold" fill="#fef08a" text-anchor="middle">Perkemahan Sabtu-Minggu (Persami) Pramuka Siaga</text>
+  <text x="250" y="298" font-family="'Segoe UI', sans-serif" font-size="13" fill="#fde68a" text-anchor="middle">Melatih Kemandirian, Disiplin, dan Gotong Royong Anggota Pramuka</text>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 350" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="suitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <clipPath id="circleClip">
+      <circle cx="150" cy="175" r="140"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background Circle Frame -->
+  <circle cx="150" cy="175" r="146" fill="#f59e0b"/>
+  <circle cx="150" cy="175" r="140" fill="url(#bgGrad)"/>
+
+  <!-- Inside Content Clipped -->
+  <g clip-path="url(#circleClip)">
+    <!-- Decorative backdrop lines -->
+    <circle cx="150" cy="175" r="110" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.15"/>
+    <circle cx="150" cy="175" r="80" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.15"/>
+
+    <!-- Body / Formal Suit (PNS / PGRI Blazer) -->
+    <path d="M 60 350 L 80 230 L 150 250 L 220 230 L 240 350 Z" fill="url(#suitGrad)"/>
+    
+    <!-- White Shirt Collar & Necktie -->
+    <polygon points="125,215 175,215 165,260 135,260" fill="#ffffff"/>
+    <polygon points="146,220 154,220 157,280 150,290 143,280" fill="#dc2626"/>
+    
+    <!-- Suit Lapels -->
+    <path d="M 115 220 L 135 270 L 110 320 L 80 235 Z" fill="#334155"/>
+    <path d="M 185 220 L 165 270 L 190 320 L 220 235 Z" fill="#334155"/>
+
+    <!-- Neck -->
+    <rect x="135" y="180" width="30" height="40" fill="#fcd34d" rx="4"/>
+
+    <!-- Head / Face -->
+    <ellipse cx="150" cy="145" rx="45" ry="52" fill="#fed7aa"/>
+    <ellipse cx="150" cy="150" rx="42" ry="48" fill="#fdba74"/>
+
+    <!-- Hair (Neat Educator Look) -->
+    <path d="M 103 140 C 103 95 130 90 150 90 C 170 90 197 95 197 140 C 192 120 175 105 150 108 C 125 105 108 120 103 140 Z" fill="#1e293b"/>
+    <!-- Sideburns -->
+    <rect x="103" y="130" width="8" height="20" rx="2" fill="#1e293b"/>
+    <rect x="189" y="130" width="8" height="20" rx="2" fill="#1e293b"/>
+
+    <!-- Ears -->
+    <ellipse cx="104" cy="150" rx="6" ry="11" fill="#fed7aa"/>
+    <ellipse cx="196" cy="150" rx="6" ry="11" fill="#fed7aa"/>
+
+    <!-- Eyebrows -->
+    <path d="M 122 132 Q 134 128 142 133" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 158 133 Q 166 128 178 132" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Glasses (Professional Headmaster Look) -->
+    <rect x="120" y="137" width="24" height="18" rx="5" fill="none" stroke="#475569" stroke-width="3"/>
+    <rect x="156" y="137" width="24" height="18" rx="5" fill="none" stroke="#475569" stroke-width="3"/>
+    <line x1="144" y1="145" x2="156" y2="145" stroke="#475569" stroke-width="3"/>
+
+    <!-- Eyes -->
+    <circle cx="132" cy="146" r="3" fill="#1e293b"/>
+    <circle cx="168" cy="146" r="3" fill="#1e293b"/>
+
+    <!-- Nose -->
+    <path d="M 150 145 L 147 160 L 153 160" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Gentle Warm Smile -->
+    <path d="M 138 172 Q 150 182 162 172" fill="none" stroke="#c2410c" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Kopiah / Peci Option or Badge -->
+    <rect x="86" y="275" width="22" height="10" rx="2" fill="#f59e0b"/>
+  </g>
+</svg>

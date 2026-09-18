@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="n4Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338ca"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="320" rx="12" fill="url(#n4Grad)"/>
+  <!-- ANBK Laptop & Checkmark Motif -->
+  <g transform="translate(160, 45)">
+    <!-- Laptop screen -->
+    <rect x="25" y="25" width="130" height="90" rx="6" fill="#1e1b4b" stroke="#c7d2fe" stroke-width="3"/>
+    <rect x="35" y="35" width="110" height="70" fill="#0284c7" rx="3"/>
+    <!-- Checkmark on screen -->
+    <path d="M 60 70 L 78 88 L 120 50" fill="none" stroke="#22c55e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Laptop base -->
+    <polygon points="10,125 170,125 160,115 20,115" fill="#94a3b8"/>
+  </g>
+  <rect x="0" y="240" width="500" height="80" fill="#312e81" opacity="0.9"/>
+  <text x="250" y="272" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="bold" fill="#fef08a" text-anchor="middle">Sukses Pelaksanaan Gladi Bersih ANBK 2026</text>
+  <text x="250" y="298" font-family="'Segoe UI', sans-serif" font-size="13" fill="#c7d2fe" text-anchor="middle">Siswa Kelas 5 SDN 057237 Antusias Menjalani Asesmen Literasi &amp; Numerasi</text>
+</svg>

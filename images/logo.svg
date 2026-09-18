@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="torchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Ring with Golden Glow -->
+  <circle cx="100" cy="100" r="94" fill="#ffffff" stroke="#f59e0b" stroke-width="5"/>
+  <circle cx="100" cy="100" r="88" fill="#f8fafc" stroke="#1e3a8a" stroke-width="3" stroke-dasharray="4,2"/>
+
+  <!-- Five Point Star Pattern (Educational Foundation) -->
+  <polygon points="100,22 107,38 124,39 111,50 115,67 100,57 85,67 89,50 76,39 93,38" fill="url(#goldGrad)" opacity="0.9"/>
+
+  <!-- Shield Base -->
+  <path d="M 50 65 Q 100 55 150 65 L 150 115 Q 150 155 100 178 Q 50 155 50 115 Z" fill="url(#shieldGrad)" stroke="#f59e0b" stroke-width="3"/>
+
+  <!-- Inner Shield Glow -->
+  <path d="M 58 72 Q 100 64 142 72 L 142 113 Q 142 147 100 168 Q 58 147 58 113 Z" fill="#0f172a" opacity="0.25"/>
+
+  <!-- Open Book (Ilmu Pengetahuan) -->
+  <g transform="translate(100, 130)">
+    <!-- Book Pages Left -->
+    <path d="M -4 -5 C -15 -18 -38 -15 -42 -2 L -42 12 C -36 0 -15 2 -4 10 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Book Pages Right -->
+    <path d="M 4 -5 C 15 -18 38 -15 42 -2 L 42 12 C 36 0 15 2 4 10 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Book Center Spine -->
+    <path d="M 0 -7 L 0 11" stroke="#f59e0b" stroke-width="2.5"/>
+  </g>
+
+  <!-- Flaming Torch (Semangat Belajar) -->
+  <g transform="translate(100, 92)">
+    <!-- Flame -->
+    <path d="M 0 -24 C -8 -14 -12 -5 0 8 C 12 -5 8 -14 0 -24 Z" fill="url(#torchGrad)"/>
+    <path d="M 0 -16 C -4 -10 -6 -3 0 5 C 6 -3 4 -10 0 -16 Z" fill="#fef08a"/>
+    <!-- Torch Handle -->
+    <path d="M -5 7 L 5 7 L 3 20 L -3 20 Z" fill="url(#goldGrad)"/>
+    <rect x="-6" y="5" width="12" height="3" rx="1.5" fill="#d97706"/>
+  </g>
+
+  <!-- Rice & Cotton Wreath (Kemakmuran & Kebajikan) -->
+  <!-- Left Paddy -->
+  <path d="M 44 100 C 40 120 48 140 68 155" fill="none" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="43" cy="105" r="3" fill="#f59e0b"/>
+  <circle cx="42" cy="118" r="3" fill="#f59e0b"/>
+  <circle cx="45" cy="130" r="3" fill="#f59e0b"/>
+  <circle cx="53" cy="142" r="3" fill="#f59e0b"/>
+  <circle cx="64" cy="152" r="3" fill="#f59e0b"/>
+
+  <!-- Right Cotton -->
+  <path d="M 156 100 C 160 120 152 140 132 155" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="157" cy="105" r="3.5" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <circle cx="158" cy="118" r="3.5" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <circle cx="155" cy="130" r="3.5" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <circle cx="147" cy="142" r="3.5" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+  <circle cx="136" cy="152" r="3.5" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+
+  <!-- Top Text on Ribbon / Arc -->
+  <text x="100" y="44" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="bold" fill="#1e3a8a" text-anchor="middle" letter-spacing="1">SDN 057237</text>
+  <text x="100" y="190" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#047857" text-anchor="middle" letter-spacing="1.5">BUKIT SELAMAT</text>
+</svg>

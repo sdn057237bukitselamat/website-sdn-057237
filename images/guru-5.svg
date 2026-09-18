@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgG5" x1="0%" y1="0%" x2="1" y2="1"><stop offset="0%" stop-color="#ea580c"/><stop offset="1%" stop-color="#c2410c"/></linearGradient>
+    <clipPath id="c5"><circle cx="120" cy="120" r="105"/></clipPath>
+  </defs>
+  <circle cx="120" cy="120" r="110" fill="#ffedd5"/>
+  <circle cx="120" cy="120" r="105" fill="url(#bgG5)"/>
+  <g clip-path="url(#c5)">
+    <!-- Sporty Teacher (PJOK) -->
+    <path d="M 40 240 L 60 170 L 120 185 L 180 170 L 200 240 Z" fill="#dc2626"/>
+    <polygon points="100,165 140,165 130,195 110,195" fill="#ffffff"/>
+    <!-- Whistle around neck -->
+    <path d="M 112 185 L 120 205 L 128 185" fill="none" stroke="#f8fafc" stroke-width="2"/>
+    <circle cx="120" cy="210" r="5" fill="#94a3b8"/>
+    <rect x="108" y="140" width="24" height="30" fill="#fed7aa"/>
+    <ellipse cx="120" cy="120" rx="36" ry="42" fill="#fed7aa"/>
+    <!-- Sporty cap -->
+    <path d="M 85 95 C 85 70 155 70 155 95 Z" fill="#1e293b"/>
+    <ellipse cx="145" cy="95" rx="30" ry="6" fill="#0f172a"/>
+    <circle cx="111" cy="120" r="3" fill="#1e293b"/>
+    <circle cx="129" cy="120" r="3" fill="#1e293b"/>
+    <path d="M 112 142 Q 120 148 128 142" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

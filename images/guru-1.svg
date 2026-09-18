@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="1%" stop-color="#0369a1"/></linearGradient>
+    <clipPath id="c1"><circle cx="120" cy="120" r="105"/></clipPath>
+  </defs>
+  <circle cx="120" cy="120" r="110" fill="#e0f2fe"/>
+  <circle cx="120" cy="120" r="105" fill="url(#bgG1)"/>
+  <g clip-path="url(#c1)">
+    <!-- Body: Khaki PNS uniform -->
+    <path d="M 40 240 L 60 170 L 120 185 L 180 170 L 200 240 Z" fill="#b45309"/>
+    <polygon points="100,165 140,165 130,195 110,195" fill="#fef3c7"/>
+    <!-- Neck -->
+    <rect x="108" y="140" width="24" height="30" fill="#fed7aa"/>
+    <!-- Head -->
+    <circle cx="120" cy="115" r="38" fill="#fed7aa"/>
+    <!-- Hijab Emerald Green -->
+    <path d="M 80 115 C 80 70 160 70 160 115 C 160 155 145 175 120 175 C 95 175 80 155 80 115 Z" fill="#047857"/>
+    <ellipse cx="120" cy="118" rx="24" ry="29" fill="#fed7aa"/>
+    <!-- Face details -->
+    <!-- Eyes -->
+    <circle cx="111" cy="116" r="3" fill="#1e293b"/>
+    <circle cx="129" cy="116" r="3" fill="#1e293b"/>
+    <!-- Eyebrows -->
+    <path d="M 105 109 Q 111 106 117 109" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <path d="M 123 109 Q 129 106 135 109" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <!-- Smile -->
+    <path d="M 113 130 Q 120 137 127 130" fill="none" stroke="#be123c" stroke-width="2" stroke-linecap="round"/>
+    <!-- Hijab folds -->
+    <path d="M 100 160 Q 120 175 140 160" fill="none" stroke="#065f46" stroke-width="2"/>
+  </g>
+</svg>

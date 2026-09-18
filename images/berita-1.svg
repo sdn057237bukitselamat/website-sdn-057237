@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="n1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="320" rx="12" fill="url(#n1Grad)"/>
+  <!-- Gold Trophy illustration -->
+  <g transform="translate(180, 50)">
+    <!-- Base -->
+    <rect x="30" y="150" width="80" height="20" rx="4" fill="#78350f"/>
+    <rect x="45" y="130" width="50" height="20" rx="2" fill="#d97706"/>
+    <!-- Trophy Stem -->
+    <rect x="62" y="105" width="16" height="25" fill="#f59e0b"/>
+    <!-- Cup Body -->
+    <path d="M 35 30 L 105 30 C 105 85 85 105 70 105 C 55 105 35 85 35 30 Z" fill="#fbbf24"/>
+    <ellipse cx="70" cy="30" rx="35" ry="12" fill="#fde047"/>
+    <!-- Handles -->
+    <path d="M 35 45 C 10 45 10 75 38 80" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 105 45 C 130 45 130 75 102 80" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
+    <!-- Star on Cup -->
+    <polygon points="70,50 74,62 87,62 76,70 80,82 70,74 60,82 64,70 53,62 66,62" fill="#d97706"/>
+  </g>
+  <!-- Banner bar -->
+  <rect x="0" y="240" width="500" height="80" fill="#0f172a" opacity="0.85"/>
+  <text x="250" y="272" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="bold" fill="#fef08a" text-anchor="middle">Siswa SDN 057237 Raih Juara O2SN Besitang</text>
+  <text x="250" y="298" font-family="'Segoe UI', sans-serif" font-size="13" fill="#cbd5e1" text-anchor="middle">Prestasi membanggakan di bidang Olahraga &amp; Seni Tingkat Kecamatan</text>
+</svg>

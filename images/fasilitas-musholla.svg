@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgM" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#d1fae5"/>
+    </linearGradient>
+    <linearGradient id="domeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" rx="12" fill="url(#bgM)"/>
+  <polygon points="0,260 400,260 400,200 0,200" fill="#065f46"/>
+  <!-- Prayer Rug Stripes -->
+  <line x1="0" y1="220" x2="400" y2="220" stroke="#047857" stroke-width="4"/>
+  <line x1="0" y1="240" x2="400" y2="240" stroke="#047857" stroke-width="4"/>
+  <!-- Mosque Dome in background/arch -->
+  <path d="M 120 120 C 120 40 280 40 280 120 Z" fill="url(#domeGrad)"/>
+  <!-- Crescent & Star on top of dome -->
+  <circle cx="200" cy="30" r="10" fill="#f59e0b"/>
+  <circle cx="203" cy="28" r="8" fill="#ecfdf5"/>
+  <polygon points="200,28 202,33 207,33 203,36 205,40 200,37 195,40 197,36 193,33 198,33" fill="#f59e0b"/>
+  <!-- Arch Frame / Mihrab -->
+  <path d="M 140 200 L 140 130 C 140 85 260 85 260 130 L 260 200 Z" fill="#ffffff" stroke="#10b981" stroke-width="4"/>
+  <!-- Quran Stand (Rehal) -->
+  <polygon points="180,185 220,185 210,195 190,195" fill="#92400e"/>
+  <polygon points="185,175 215,175 200,185" fill="#f59e0b"/>
+  <!-- Text -->
+  <text x="200" y="150" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="bold" fill="#065f46" text-anchor="middle">Musholla Sekolah</text>
+  <text x="200" y="170" font-family="'Segoe UI', sans-serif" font-size="11" fill="#047857" text-anchor="middle">Sarana Ibadah &amp; Pembinaan Karakter Religius</text>
+</svg>

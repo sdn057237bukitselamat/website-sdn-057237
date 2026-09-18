@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="g3Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="60%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" rx="12" fill="url(#g3Grad)"/>
+  <rect x="0" y="280" width="600" height="120" fill="#065f46"/>
+  <!-- Scout Semaphore flag illustration & students -->
+  <g transform="translate(180, 160)">
+    <line x1="30" y1="20" x2="0" y2="-20" stroke="#fef08a" stroke-width="4"/>
+    <polygon points="0,-20 20,-35 10,-10" fill="#dc2626"/>
+    <polygon points="20,-35 30,-20 10,-10" fill="#facc15"/>
+    <line x1="50" y1="20" x2="80" y2="-20" stroke="#fef08a" stroke-width="4"/>
+    <polygon points="80,-20 60,-35 70,-10" fill="#dc2626"/>
+    <polygon points="60,-35 50,-20 70,-10" fill="#facc15"/>
+    <!-- Student body in scout uniform -->
+    <circle cx="40" cy="15" r="14" fill="#fed7aa"/>
+    <!-- Scout hat -->
+    <ellipse cx="40" cy="8" rx="20" ry="5" fill="#451a03"/>
+    <rect x="30" y="30" width="20" height="34" fill="#92400e" rx="3"/>
+    <polygon points="36,30 44,30 40,42" fill="#ef4444"/> <!-- neckerchief -->
+    <rect x="30" y="64" width="20" height="30" fill="#451a03"/>
+  </g>
+  <!-- Camp tent in background -->
+  <polygon points="380,280 440,190 500,280" fill="#fef3c7" stroke="#78350f" stroke-width="3"/>
+  <polygon points="440,190 500,280 475,280 440,200" fill="#fde68a"/>
+  <rect x="0" y="340" width="600" height="60" fill="#0f172a" opacity="0.85"/>
+  <text x="300" y="375" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">Latihan Keterampilan &amp; Sandi Pramuka Gugus Depan</text>
+</svg>

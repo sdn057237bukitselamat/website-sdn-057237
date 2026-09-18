@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgG6" x1="0%" y1="0%" x2="1" y2="1"><stop offset="0%" stop-color="#0891b2"/><stop offset="1%" stop-color="#0e7490"/></linearGradient>
+    <clipPath id="c6"><circle cx="120" cy="120" r="105"/></clipPath>
+  </defs>
+  <circle cx="120" cy="120" r="110" fill="#cffafe"/>
+  <circle cx="120" cy="120" r="105" fill="url(#bgG6)"/>
+  <g clip-path="url(#c6)">
+    <!-- Admin Staff / Tendik -->
+    <path d="M 40 240 L 60 170 L 120 185 L 180 170 L 200 240 Z" fill="#475569"/>
+    <polygon points="100,165 140,165 130,195 110,195" fill="#f8fafc"/>
+    <rect x="108" y="140" width="24" height="30" fill="#fed7aa"/>
+    <!-- Hijab Navy -->
+    <path d="M 80 115 C 80 70 160 70 160 115 C 160 155 145 175 120 175 C 95 175 80 155 80 115 Z" fill="#1e3a8a"/>
+    <ellipse cx="120" cy="118" rx="24" ry="29" fill="#fed7aa"/>
+    <!-- Glasses -->
+    <rect x="100" y="112" width="16" height="12" rx="3" fill="none" stroke="#64748b" stroke-width="2"/>
+    <rect x="124" y="112" width="16" height="12" rx="3" fill="none" stroke="#64748b" stroke-width="2"/>
+    <line x1="116" y1="117" x2="124" y2="117" stroke="#64748b" stroke-width="2"/>
+    <circle cx="108" cy="118" r="2.5" fill="#1e293b"/>
+    <circle cx="132" cy="118" r="2.5" fill="#1e293b"/>
+    <path d="M 113 132 Q 120 138 127 132" fill="none" stroke="#be123c" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>
