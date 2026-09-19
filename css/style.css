@@ -2642,13 +2642,15 @@ textarea.form-control {
   50% { transform:translate3d(-7px,-22px,0) scale(1.04); }
   75% { transform:translate3d(10px,-6px,0) scale(.98); }
 }
+
+/* Animate each wave path vertically only so its bounding box stays inside the viewport. */
 @keyframes waveSway {
-  0%,100% { transform:translateX(-1.5%) translateY(2px) scaleX(1.03); }
-  50% { transform:translateX(1.5%) translateY(-4px) scaleX(1.03); }
+  0%,100% { transform:translateY(2px); }
+  50% { transform:translateY(-4px); }
 }
 @keyframes waveSwayReverse {
-  0%,100% { transform:translateX(1.5%) translateY(-1px) scaleX(1.04); }
-  50% { transform:translateX(-1.5%) translateY(4px) scaleX(1.04); }
+  0%,100% { transform:translateY(-1px); }
+  50% { transform:translateY(4px); }
 }
 
 @media (max-width:768px) {
