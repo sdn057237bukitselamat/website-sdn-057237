@@ -412,6 +412,7 @@ button, input, textarea, select {
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   opacity: 0.05;
@@ -468,9 +469,8 @@ button, input, textarea, select {
 
 .hero-title span {
   color: var(--primary);
-  background: linear-gradient(120deg, var(--primary) 0%, var(--primary-light) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
 
 .hero-subtitle {
@@ -2674,3 +2674,10 @@ textarea.form-control {
   .info-card p,
   .info-card strong { overflow-wrap:anywhere; word-break:break-word; }
 }
+
+
+/* Hero layer contract: decorative layers stay behind readable content. */
+.hero-pattern { z-index: 0; }
+.hero-bubbles { z-index: 1; }
+.hero-wave { z-index: 2; }
+.hero-grid { position: relative; z-index: 3; }
