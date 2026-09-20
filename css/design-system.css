@@ -838,3 +838,287 @@ body {
     animation: none;
   }
 }
+
+
+/* ==========================================================================
+   GURU PAGE — interaction, decoration, reveal & skeleton loading
+   ========================================================================== */
+.guru-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.guru-page::before,
+.guru-page::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: .72;
+}
+.guru-page::before {
+  width: 360px;
+  height: 360px;
+  top: 250px;
+  left: -190px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(56,189,248,.20), transparent 62%),
+    radial-gradient(circle at 70% 70%, rgba(37,99,235,.13), transparent 58%);
+  animation: guruDecorFloat 12s ease-in-out infinite;
+}
+.guru-page::after {
+  width: 420px;
+  height: 420px;
+  right: -230px;
+  top: 900px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(16,185,129,.16), transparent 60%),
+    radial-gradient(circle at 65% 65%, rgba(245,158,11,.13), transparent 58%);
+  animation: guruDecorFloat 15s ease-in-out infinite reverse;
+}
+.guru-directory-section {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(56,189,248,.055), transparent 24%),
+    radial-gradient(circle at 7% 78%, rgba(16,185,129,.05), transparent 22%),
+    #fff !important;
+}
+.guru-directory-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(37,99,235,.11) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+  opacity: .34;
+}
+.guru-directory-section > .container { position: relative; z-index: 1; }
+
+.guru-card {
+  transform: translateY(0);
+  transition:
+    transform .3s cubic-bezier(.2,.75,.25,1),
+    box-shadow .3s ease,
+    border-color .3s ease,
+    background .3s ease;
+}
+.guru-card::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color .3s ease, opacity .3s ease;
+}
+.guru-card:hover {
+  transform: translateY(-9px);
+  border-color: rgba(37,99,235,.24);
+  box-shadow: 0 22px 48px rgba(15,23,42,.13);
+}
+.guru-card:hover::after {
+  border-color: rgba(37,99,235,.08);
+}
+.guru-card:hover .guru-card-accent {
+  height: 7px;
+  box-shadow: 0 0 18px rgba(6,182,212,.22);
+}
+.guru-card:hover .guru-avatar {
+  transform: translateY(-5px) scale(1.025);
+  box-shadow: 0 18px 34px rgba(15,23,42,.16), 0 0 0 5px rgba(37,99,235,.05);
+}
+.guru-card:hover .guru-category-badge {
+  transform: translateY(-1px);
+}
+.guru-category-badge { transition: transform .22s ease, box-shadow .22s ease; }
+
+.filter-tabs {
+  position: relative;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.filter-tabs.is-switching {
+  opacity: .82;
+  transform: translateY(1px);
+}
+.filter-btn {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  transition:
+    transform .2s cubic-bezier(.2,.75,.25,1),
+    box-shadow .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease;
+}
+.filter-btn::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.32);
+  transform: translate(-50%,-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+.filter-btn.active {
+  transform: translateY(-1px);
+}
+.filter-btn:active {
+  transform: translateY(1px) scale(.98);
+}
+.filter-btn.filter-pop {
+  animation: filterPop .28s ease;
+}
+.filter-btn.filter-pop::after {
+  animation: filterRipple .34s ease-out;
+}
+.filter-updated {
+  animation: guruGridPulse .28s ease;
+}
+
+.guru-loading-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 24px;
+  width: 100%;
+}
+.guru-skeleton-card {
+  position: relative;
+  min-height: 430px;
+  padding: 30px 24px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(226,232,240,.9);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(15,23,42,.045);
+  opacity: 0;
+  animation: skeletonCardIn .4s ease forwards;
+  animation-delay: var(--skeleton-delay, 0ms);
+}
+.guru-skeleton {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #e9eef5;
+  border-radius: 10px;
+}
+.guru-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.72), transparent);
+  animation: skeletonShimmer 1.35s ease-in-out infinite;
+}
+.guru-skeleton-accent {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  border-radius: 0;
+  background: #e3eaf3;
+}
+.guru-skeleton-avatar {
+  width: 142px;
+  height: 142px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+}
+.guru-skeleton-pill {
+  width: 88px;
+  height: 28px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+}
+.guru-skeleton-name {
+  width: 72%;
+  height: 20px;
+  margin: 0 auto 10px;
+}
+.guru-skeleton-role {
+  width: 54%;
+  height: 15px;
+  margin: 0 auto 22px;
+}
+.guru-skeleton-info {
+  width: 100%;
+  height: 78px;
+  border-radius: 14px;
+}
+.guru-card:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+.guru-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .55s ease, transform .55s cubic-bezier(.2,.75,.25,1), box-shadow .3s ease, border-color .3s ease;
+}
+.guru-card:nth-child(2).is-visible { transition-delay: .04s; }
+.guru-card:nth-child(3).is-visible { transition-delay: .08s; }
+.guru-card:nth-child(4).is-visible { transition-delay: .12s; }
+.guru-card:nth-child(5).is-visible { transition-delay: .16s; }
+.guru-card:nth-child(6).is-visible { transition-delay: .20s; }
+
+@keyframes guruDecorFloat {
+  0%,100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(18px,-12px,0) scale(1.04); }
+}
+@keyframes filterPop {
+  0% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-2px) scale(1.035); }
+  100% { transform: translateY(-1px) scale(1); }
+}
+@keyframes filterRipple {
+  0% { opacity: .45; transform: translate(-50%,-50%) scale(0); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(22); }
+}
+@keyframes guruGridPulse {
+  0% { opacity: .55; transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes skeletonShimmer {
+  100% { transform: translateX(100%); }
+}
+@keyframes skeletonCardIn {
+  to { opacity: 1; }
+}
+
+@media (max-width: 1024px) {
+  .guru-loading-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 768px) {
+  .guru-loading-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+  .guru-skeleton-card { min-height: 390px; padding: 25px 17px 20px; }
+  .guru-skeleton-avatar { width: 118px; height: 118px; }
+}
+@media (max-width: 520px) {
+  .guru-loading-grid { grid-template-columns: 1fr; }
+  .guru-skeleton-card { min-height: 405px; }
+  .guru-skeleton-avatar { width: 132px; height: 132px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guru-page::before,
+  .guru-page::after,
+  .guru-card,
+  .guru-card.is-visible,
+  .guru-stat-total,
+  .guru-stat-guru,
+  .guru-stat-tendik,
+  .filter-btn.filter-pop,
+  .filter-updated,
+  .guru-skeleton,
+  .guru-skeleton-card {
+    animation: none !important;
+    transition: none !important;
+  }
+  .guru-card:not(.is-visible) { opacity: 1; transform: none; }
+  .guru-card.is-visible { opacity: 1; transform: none; }
+}
