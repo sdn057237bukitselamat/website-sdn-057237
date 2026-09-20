@@ -206,6 +206,11 @@ function initFilterTabs() {
     if (!buttons.length || !targetType) return;
 
     const applyFilter = (filterValue) => {
+      const targetButton = buttons.find(btn => btn.dataset.filter === filterValue);
+      group.classList.add('is-switching');
+      window.clearTimeout(group._switchTimer);
+      group._switchTimer = window.setTimeout(() => group.classList.remove('is-switching'), 260);
+
       buttons.forEach(btn => {
         const selected = btn.dataset.filter === filterValue;
         btn.classList.toggle('active', selected);
@@ -225,6 +230,14 @@ function initFilterTabs() {
       const grid = document.getElementById(`${targetType}Grid`);
       if (grid) {
         grid.dataset.activeFilter = filterValue;
+        grid.classList.remove('filter-updated');
+        void grid.offsetWidth;
+        grid.classList.add('filter-updated');
+        if (targetButton) {
+          targetButton.classList.remove('filter-pop');
+          void targetButton.offsetWidth;
+          targetButton.classList.add('filter-pop');
+        }
         grid.setAttribute('aria-label', `${visibleCount} data ditampilkan`);
       }
     };
@@ -367,9 +380,25 @@ async function initGuruDirectory() {
 
   const setState = (type, title, detail = '', action = '') => {
     grid.setAttribute('aria-busy', type === 'loading' ? 'true' : 'false');
+
+    if (type === 'loading') {
+      grid.innerHTML = `
+        <div class="guru-loading-grid" role="status" aria-label="Memuat profil guru dan tenaga kependidikan">
+          ${Array.from({ length: 6 }, (_, index) => `
+            <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:${index * 45}ms">
+              <span class="guru-skeleton guru-skeleton-accent"></span>
+              <span class="guru-skeleton guru-skeleton-avatar"></span>
+              <span class="guru-skeleton guru-skeleton-pill"></span>
+              <span class="guru-skeleton guru-skeleton-name"></span>
+              <span class="guru-skeleton guru-skeleton-role"></span>
+              <span class="guru-skeleton guru-skeleton-info"></span>
+            </div>`).join('')}
+        </div>`;
+      return;
+    }
+
     grid.innerHTML = `
       <div class="guru-state guru-state-${type}" role="${type === 'error' ? 'alert' : 'status'}">
-        ${type === 'loading' ? '<span class="guru-spinner" aria-hidden="true"></span>' : ''}
         <strong>${escapeHtml(title)}</strong>
         ${detail ? `<span>${escapeHtml(detail)}</span>` : ''}
         ${action}
@@ -426,6 +455,8 @@ async function initGuruDirectory() {
     document.querySelectorAll('.filter-count[data-count]').forEach(counter => {
       counter.textContent = countMap[counter.dataset.count] || 0;
     });
+
+    initGuruScrollReveal();
 
     // Re-apply the active filter after async rendering.
     const group = document.querySelector('.filter-tabs[data-target="guru"]');
@@ -485,7 +516,43 @@ async function initGuruDirectory() {
 
 
 /* ==========================================================================
-   10. Berita Detail
+   10. Guru Page — scroll reveal
+   ========================================================================== */
+function initGuruScrollReveal() {
+  const items = document.querySelectorAll('.guru-card');
+  if (!items.length) return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+    items.forEach(item => item.classList.add('is-visible'));
+    return;
+  }
+
+  if (window.__guruRevealObserver) {
+    items.forEach(item => {
+      if (!item.dataset.revealBound) {
+        item.dataset.revealBound = 'true';
+        window.__guruRevealObserver.observe(item);
+      }
+    });
+    return;
+  }
+
+  window.__guruRevealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+
+  items.forEach(item => {
+    item.dataset.revealBound = 'true';
+    window.__guruRevealObserver.observe(item);
+  });
+}
+
+/* ==========================================================================
+   11. Berita Detail
    ========================================================================== */
 function initNewsDetails() {
   const links = document.querySelectorAll('.js-news-detail');
