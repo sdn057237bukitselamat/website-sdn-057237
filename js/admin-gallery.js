@@ -38,6 +38,36 @@ function showLoginAlert(message) {
   box.textContent = message;
 }
 
+function getAuthErrorMessage(error) {
+  const message = String(error?.message || '').toLowerCase();
+
+  if (message.includes('invalid login credentials')) {
+    return 'Email atau password salah.';
+  }
+  if (message.includes('email not confirmed')) {
+    return 'Email akun belum dikonfirmasi di Supabase Auth.';
+  }
+  if (message.includes('too many requests')) {
+    return 'Terlalu banyak percobaan login. Tunggu beberapa saat lalu coba lagi.';
+  }
+  if (message.includes('fetch') || message.includes('network')) {
+    return 'Tidak dapat terhubung ke server autentikasi. Periksa koneksi internet.';
+  }
+
+  return 'Login gagal: ' + (error?.message || 'Kesalahan autentikasi tidak diketahui.');
+}
+
+function describeProfileError(error) {
+  if (!error) return 'Profil administrator tidak ditemukan.';
+  if (error.code === 'PGRST116') {
+    return 'Login berhasil, tetapi profil akun belum tersedia di tabel profiles.';
+  }
+  if (error.code === '42501' || String(error.message || '').toLowerCase().includes('permission')) {
+    return 'Login berhasil, tetapi akses ke profil ditolak oleh RLS Supabase.';
+  }
+  return 'Login berhasil, tetapi profil administrator gagal diverifikasi: ' + (error.message || 'kesalahan database.');
+}
+
 function setView(loggedIn) {
   $('adminLogin').hidden = loggedIn;
   $('adminApp').hidden = !loggedIn;
@@ -45,26 +75,51 @@ function setView(loggedIn) {
 }
 
 async function requireAdmin() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
+  // getUser() melakukan verifikasi ke Auth server, sehingga lebih andal
+  // daripada hanya mengandalkan session lokal di browser.
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error('Auth verification error:', authError);
+    setView(false);
+    showLoginAlert(getAuthErrorMessage(authError));
+    return false;
+  }
+
+  if (!user) {
     setView(false);
     return false;
   }
 
-  const { data: profile, error } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('id,email,nama,role')
-    .eq('id', session.user.id)
-    .single();
+    .eq('id', user.id)
+    .maybeSingle();
 
-  if (error || profile?.role !== 'admin') {
+  if (profileError) {
+    console.error('Profile query error:', profileError);
     await supabase.auth.signOut();
     setView(false);
-    showLoginAlert('Akun ini tidak memiliki akses administrator.');
+    showLoginAlert(describeProfileError(profileError));
     return false;
   }
 
-  currentUserId = session.user.id;
+  if (!profile) {
+    await supabase.auth.signOut();
+    setView(false);
+    showLoginAlert('Login berhasil, tetapi profil akun belum tersedia di database.');
+    return false;
+  }
+
+  if (profile.role !== 'admin') {
+    await supabase.auth.signOut();
+    setView(false);
+    showLoginAlert('Akun ini berhasil login, tetapi role-nya bukan admin.');
+    return false;
+  }
+
+  currentUserId = user.id;
   $('adminUserBar').innerHTML = '<span>Masuk sebagai <strong>' + esc(profile.nama || profile.email) + '</strong></span><button id="adminLogout" class="btn btn-sm btn-outline" type="button">Keluar</button>';
   $('adminLogout').addEventListener('click', async () => {
     await supabase.auth.signOut();
@@ -421,26 +476,41 @@ async function deletePhoto(id, path) {
 $('adminLoginForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   const button = $('adminLoginButton');
-  button.disabled = true;
-  button.textContent = 'Memproses...';
-  const { error } = await supabase.auth.signInWithPassword({
-    email: $('adminEmail').value.trim(),
-    password: $('adminPassword').value
-  });
+  const email = $('adminEmail').value.trim();
+  const password = $('adminPassword').value;
 
-  if (error) {
-    showLoginAlert('Login gagal. Periksa email dan password.');
-  } else {
-    try {
-      const ok = await requireAdmin();
-      if (!ok) return;
-    } catch (error) {
-      console.error(error);
-      showLoginAlert('Profil administrator belum dapat diverifikasi.');
-    }
+  if (!email || !password) {
+    showLoginAlert('Email dan password wajib diisi.');
+    return;
   }
-  button.disabled = false;
-  button.textContent = 'Masuk ke Dashboard';
+
+  button.disabled = true;
+  button.textContent = 'Memverifikasi...';
+  $('adminLoginAlert')?.setAttribute('hidden', '');
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      console.error('Supabase sign-in error:', error);
+      showLoginAlert(getAuthErrorMessage(error));
+      return;
+    }
+
+    if (!data?.user) {
+      showLoginAlert('Autentikasi tidak menghasilkan akun pengguna. Silakan coba lagi.');
+      return;
+    }
+
+    const ok = await requireAdmin();
+    if (!ok) return;
+  } catch (error) {
+    console.error('Unexpected login error:', error);
+    showLoginAlert('Terjadi kesalahan saat login. Buka ulang halaman lalu coba lagi.');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Masuk ke Dashboard';
+  }
 });
 
 $('galleryUploadForm')?.addEventListener('submit', uploadPhoto);
@@ -448,8 +518,18 @@ $('refreshGalleryButton')?.addEventListener('click', loadGallery);
 $('refreshTeachersButton')?.addEventListener('click', loadTeachers);
 $('refreshUsersButton')?.addEventListener('click', loadAdminUsers);
 
-requireAdmin().catch(error => {
-  console.error(error);
-  setView(false);
-  showLoginAlert('Dashboard belum dapat dimuat. Silakan coba lagi.');
-});
+let authCheckPromise = null;
+
+function checkExistingAdminSession() {
+  if (!authCheckPromise) {
+    authCheckPromise = requireAdmin().catch(error => {
+      console.error('Initial admin session check failed:', error);
+      setView(false);
+      showLoginAlert('Dashboard belum dapat dimuat. Silakan coba lagi.');
+      return false;
+    });
+  }
+  return authCheckPromise;
+}
+
+checkExistingAdminSession();
