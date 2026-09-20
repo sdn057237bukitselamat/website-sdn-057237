@@ -201,28 +201,53 @@ function initFilterTabs() {
   const tabGroups = document.querySelectorAll('.filter-tabs');
 
   tabGroups.forEach(group => {
-    const buttons = group.querySelectorAll('.filter-btn');
-    const targetType = group.getAttribute('data-target'); // e.g. 'guru', 'berita', 'galeri'
+    const buttons = [...group.querySelectorAll('.filter-btn')];
+    const targetType = group.getAttribute('data-target');
+    if (!buttons.length || !targetType) return;
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Remove active class from all buttons in group
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    const applyFilter = (filterValue) => {
+      buttons.forEach(btn => {
+        const selected = btn.dataset.filter === filterValue;
+        btn.classList.toggle('active', selected);
+        btn.setAttribute('aria-pressed', String(selected));
+      });
 
-        const filterValue = btn.getAttribute('data-filter');
-        const items = document.querySelectorAll(`[data-${targetType}-category]`);
+      const items = document.querySelectorAll(`[data-${targetType}-category]`);
+      let visibleCount = 0;
 
-        items.forEach(item => {
-          const category = item.getAttribute(`data-${targetType}-category`);
-          if (filterValue === 'all' || category === filterValue || category?.includes(filterValue)) {
-            item.style.display = '';
-          } else {
-            item.style.display = 'none';
-          }
-        });
+      items.forEach(item => {
+        const category = item.getAttribute(`data-${targetType}-category`) || '';
+        const visible = filterValue === 'all' || category === filterValue || category.includes(filterValue);
+        item.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+
+      const grid = document.getElementById(`${targetType}Grid`);
+      if (grid) {
+        grid.dataset.activeFilter = filterValue;
+        grid.setAttribute('aria-label', `${visibleCount} data ditampilkan`);
+      }
+    };
+
+    buttons.forEach((btn, index) => {
+      btn.addEventListener('click', () => applyFilter(btn.dataset.filter || 'all'));
+
+      btn.addEventListener('keydown', event => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') return;
+        event.preventDefault();
+
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % buttons.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + buttons.length) % buttons.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = buttons.length - 1;
+
+        buttons[nextIndex].focus();
+        applyFilter(buttons[nextIndex].dataset.filter || 'all');
       });
     });
+
+    applyFilter(group.querySelector('.filter-btn.active')?.dataset.filter || 'all');
   });
 }
 
@@ -335,57 +360,93 @@ async function initGuruDirectory() {
   }[char]));
 
   const getInitials = (name) => {
-    const baseName = String(name ?? '').split(',')[0].trim();
-    const parts = baseName.split(/\s+/).filter(Boolean);
+    const parts = String(name ?? '').split(',')[0].trim().split(/\s+/).filter(Boolean);
     if (!parts.length) return '?';
-    if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
-    return (parts[0].slice(0, 1) + parts[parts.length - 1].slice(0, 1)).toUpperCase();
+    return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+  };
+
+  const setState = (type, title, detail = '', action = '') => {
+    grid.setAttribute('aria-busy', type === 'loading' ? 'true' : 'false');
+    grid.innerHTML = `
+      <div class="guru-state guru-state-${type}" role="${type === 'error' ? 'alert' : 'status'}">
+        ${type === 'loading' ? '<span class="guru-spinner" aria-hidden="true"></span>' : ''}
+        <strong>${escapeHtml(title)}</strong>
+        ${detail ? `<span>${escapeHtml(detail)}</span>` : ''}
+        ${action}
+      </div>`;
   };
 
   const render = (people) => {
+    grid.setAttribute('aria-busy', 'false');
+
     grid.innerHTML = people.map(person => {
-      const category = escapeHtml(person.kategori);
+      const category = escapeHtml(person.kategori || 'guru');
       const name = escapeHtml(person.nama);
       const image = String(person.image || '').trim();
       const avatar = image
-        ? '<img class="guru-avatar guru-avatar-photo guru-avatar-' + category + '" src="' + escapeHtml(image) + '" alt="Foto ' + name + '" loading="lazy">'
-        : '<div class="guru-avatar guru-avatar-initials guru-avatar-' + category + '" role="img" aria-label="Avatar ' + name + '"><span aria-hidden="true">' + escapeHtml(getInitials(person.nama)) + '</span><i aria-hidden="true"></i></div>';
+        ? `<div class="guru-avatar guru-avatar-photo-wrap">
+             <img class="guru-avatar-photo" src="${escapeHtml(image)}" alt="Foto ${name}" loading="lazy" decoding="async" width="320" height="320">
+           </div>`
+        : `<div class="guru-avatar guru-avatar-initials" role="img" aria-label="Avatar ${name}">
+             <span aria-hidden="true">${escapeHtml(getInitials(person.nama))}</span>
+           </div>`;
 
       return `
-      <article class="guru-card" data-guru-category="${category}">
-        ${avatar}
-        <h3 class="guru-name">${name}</h3>
-        <span class="guru-role">${escapeHtml(person.jabatan)}</span>
-        <div class="guru-info-list">
-          <div class="guru-info-item">
-            <span class="guru-info-label">Status:</span>
-            <span>${escapeHtml(person.status)}</span>
+        <article class="guru-card" data-guru-category="${category}" data-guru-id="${escapeHtml(person.id || '')}">
+          <div class="guru-card-accent" aria-hidden="true"></div>
+          ${avatar}
+          <div class="guru-card-body">
+            <span class="guru-category-badge guru-category-${category}">${escapeHtml(person.kategori === 'kelas' ? 'Guru Kelas' : person.kategori === 'mapel' ? 'Guru Mapel' : person.kategori === 'pimpinan' ? 'Pimpinan' : 'Tenaga Kependidikan')}</span>
+            <h3 class="guru-name">${name}</h3>
+            <p class="guru-role">${escapeHtml(person.jabatan)}</p>
+            <dl class="guru-info-list">
+              <div class="guru-info-item"><dt>Status</dt><dd>${escapeHtml(person.status)}</dd></div>
+              <div class="guru-info-item"><dt>Tugas</dt><dd>${escapeHtml(person.tugas)}</dd></div>
+            </dl>
           </div>
-          <div class="guru-info-item">
-            <span class="guru-info-label">Tugas:</span>
-            <span>${escapeHtml(person.tugas)}</span>
-          </div>
-        </div>
-      </article>
+        </article>
       `;
     }).join('');
+
+    if (!people.length) {
+      setState('empty', 'Belum ada data pada kategori ini.', 'Silakan pilih kategori lain untuk melihat data yang tersedia.');
+    }
+
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    const count = grid.querySelectorAll(`[data-guru-category]`).length;
+    grid.setAttribute('aria-label', `${count} data guru dan tenaga kependidikan`);
+
+    // Re-apply the active filter after async rendering.
+    const group = document.querySelector('.filter-tabs[data-target="guru"]');
+    const activeButton = group?.querySelector('.filter-btn.active');
+    if (activeButton) {
+      activeButton.click();
+    } else {
+      void activeFilter;
+    }
   };
 
-  try {
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm');
-    const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
-    const { data, error } = await supabase
-      .from('guru')
-      .select('id,nama,status,tugas,kategori,jabatan,image')
-      .eq('aktif', true)
-      .order('nama', { ascending: true });
+  const loadDirectory = async () => {
+    setState('loading', 'Memuat data pendidik...', 'Mengambil data terbaru dari sumber sekolah.');
 
-    if (error) throw error;
-    const people = Array.isArray(data) ? data : [];
-    if (!people.length) throw new Error('Data guru kosong.');
-    render(people);
-  } catch (dbError) {
-    console.warn('Data guru online belum tersedia, menggunakan data cadangan:', dbError);
+    try {
+      const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm');
+      const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_PUBLISHABLE_KEY);
+      const { data, error } = await supabase
+        .from('guru')
+        .select('id,nama,status,tugas,kategori,jabatan,image')
+        .eq('aktif', true)
+        .order('nama', { ascending: true });
+
+      if (error) throw error;
+      const people = Array.isArray(data) ? data : [];
+      if (!people.length) throw new Error('Data online kosong.');
+      render(people);
+      return;
+    } catch (dbError) {
+      console.warn('Data guru online belum tersedia, menggunakan data cadangan:', dbError);
+    }
+
     try {
       const response = await fetch('data/guru.json', { cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -395,10 +456,19 @@ async function initGuruDirectory() {
       render(people);
     } catch (err) {
       console.error('Gagal memuat direktori guru:', err);
-      grid.innerHTML = '<div style="grid-column:1 / -1; text-align:center; padding:32px; color:var(--muted);">Data pendidik dan tenaga kependidikan belum dapat dimuat. Silakan coba lagi.</div>';
+      setState(
+        'error',
+        'Data guru belum dapat dimuat.',
+        'Periksa koneksi internet atau coba muat ulang halaman.',
+        '<button type="button" class="btn btn-primary guru-retry" id="guruRetry">Coba Lagi</button>'
+      );
+      document.getElementById('guruRetry')?.addEventListener('click', loadDirectory);
     }
-  }
+  };
+
+  await loadDirectory();
 }
+
 
 
 
