@@ -748,3 +748,93 @@ body {
   .guru-spinner { animation: none; }
   .guru-avatar { transition: none; }
 }
+
+
+/* ==========================================================================
+   GURU PAGE POLISH — visual statistics & subtle entrance motion
+   ========================================================================== */
+.guru-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.guru-summary-grid .guru-stat-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 146px;
+  align-items: center;
+  border: 1px solid rgba(226,232,240,.9);
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 12px 30px rgba(15,23,42,.07);
+  transition: transform .28s cubic-bezier(.2,.75,.25,1), box-shadow .28s ease, border-color .28s ease;
+}
+.guru-summary-grid .guru-stat-card::after {
+  content: "";
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  right: -48px;
+  bottom: -58px;
+  border-radius: 50%;
+  background: rgba(37,99,235,.07);
+  pointer-events: none;
+}
+.guru-summary-grid .guru-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(15,23,42,.11);
+}
+.guru-summary-grid .guru-stat-card .stat-icon {
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  transition: transform .28s ease;
+}
+.guru-summary-grid .guru-stat-card:hover .stat-icon {
+  transform: scale(1.06) rotate(-2deg);
+}
+.guru-summary-grid .guru-stat-card .stat-number {
+  font-size: clamp(2rem, 4vw, 2.55rem);
+  line-height: 1;
+}
+.guru-summary-grid .guru-stat-card .stat-label {
+  max-width: 220px;
+  line-height: 1.35;
+}
+.guru-stat-total { animation: guruStatIn .55s both; }
+.guru-stat-guru { animation: guruStatIn .55s .08s both; }
+.guru-stat-tendik { animation: guruStatIn .55s .16s both; }
+
+.guru-card {
+  animation: guruCardIn .45s both;
+}
+.guru-card:nth-child(2) { animation-delay: .04s; }
+.guru-card:nth-child(3) { animation-delay: .08s; }
+.guru-card:nth-child(4) { animation-delay: .12s; }
+.guru-card:nth-child(5) { animation-delay: .16s; }
+.guru-card:nth-child(6) { animation-delay: .20s; }
+
+@keyframes guruStatIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes guruCardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .guru-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .guru-summary-grid .guru-stat-card {
+    min-height: 126px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guru-stat-total,
+  .guru-stat-guru,
+  .guru-stat-tendik,
+  .guru-card {
+    animation: none;
+  }
+}
