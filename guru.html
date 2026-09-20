@@ -151,16 +151,20 @@
         </div>
 
         <!-- Filter Tabs -->
-        <div class="filter-tabs" data-target="guru">
-          <button class="filter-btn active" data-filter="all">Semua</button>
-          <button class="filter-btn" data-filter="pimpinan">Pimpinan</button>
-          <button class="filter-btn" data-filter="kelas">Guru Kelas</button>
-          <button class="filter-btn" data-filter="mapel">Guru Mapel</button>
-          <button class="filter-btn" data-filter="tendik">Tata Usaha &amp; Tendik</button>
+        <div class="filter-tabs" data-target="guru" role="group" aria-label="Filter kategori pendidik dan tenaga kependidikan">
+          <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">Semua <span class="filter-count" data-count="all">11</span></button>
+          <button type="button" class="filter-btn" data-filter="pimpinan" aria-pressed="false">Pimpinan <span class="filter-count" data-count="pimpinan">1</span></button>
+          <button type="button" class="filter-btn" data-filter="kelas" aria-pressed="false">Guru Kelas <span class="filter-count" data-count="kelas">6</span></button>
+          <button type="button" class="filter-btn" data-filter="mapel" aria-pressed="false">Guru Mapel <span class="filter-count" data-count="mapel">2</span></button>
+          <button type="button" class="filter-btn" data-filter="tendik" aria-pressed="false">Tata Usaha &amp; Tendik <span class="filter-count" data-count="tendik">1</span></button>
         </div>
 
-        <div class="guru-grid" id="guruGrid" aria-live="polite">
-          <p style="grid-column: 1 / -1; text-align: center; color: var(--muted);">Memuat data pendidik dan tenaga kependidikan...</p>
+        <div class="guru-grid" id="guruGrid" aria-live="polite" aria-busy="true">
+          <div class="guru-state guru-state-loading" role="status">
+            <span class="guru-spinner" aria-hidden="true"></span>
+            <strong>Memuat data pendidik...</strong>
+            <span>Mohon tunggu sebentar.</span>
+          </div>
         </div>
 
         <div style="background: #f8fafc; border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 18px; margin-top: 40px; text-align: center; color: var(--muted); font-size: 0.88rem;">
