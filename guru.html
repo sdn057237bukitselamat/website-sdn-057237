@@ -90,7 +90,7 @@
     </div>
   </header>
 
-  <main>
+  <main class="guru-page">
     <!-- Page Header Banner -->
     <section class="page-header">
       <div class="container page-header-content">
@@ -142,7 +142,7 @@
     </section>
 
     <!-- Filter & Daftar Guru -->
-    <section class="section bg-white">
+    <section class="section bg-white guru-directory-section">
       <div class="container">
         <div class="section-header">
           <span class="section-tag">Daftar Pengajar</span>
@@ -160,10 +160,56 @@
         </div>
 
         <div class="guru-grid" id="guruGrid" aria-live="polite" aria-busy="true">
-          <div class="guru-state guru-state-loading" role="status">
-            <span class="guru-spinner" aria-hidden="true"></span>
-            <strong>Memuat data pendidik...</strong>
-            <span>Mohon tunggu sebentar.</span>
+          <div class="guru-loading-grid" role="status" aria-label="Memuat profil guru dan tenaga kependidikan">
+            
+              <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:0ms">
+                <span class="guru-skeleton guru-skeleton-accent"></span>
+                <span class="guru-skeleton guru-skeleton-avatar"></span>
+                <span class="guru-skeleton guru-skeleton-pill"></span>
+                <span class="guru-skeleton guru-skeleton-name"></span>
+                <span class="guru-skeleton guru-skeleton-role"></span>
+                <span class="guru-skeleton guru-skeleton-info"></span>
+              </div>
+              <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:45ms">
+                <span class="guru-skeleton guru-skeleton-accent"></span>
+                <span class="guru-skeleton guru-skeleton-avatar"></span>
+                <span class="guru-skeleton guru-skeleton-pill"></span>
+                <span class="guru-skeleton guru-skeleton-name"></span>
+                <span class="guru-skeleton guru-skeleton-role"></span>
+                <span class="guru-skeleton guru-skeleton-info"></span>
+              </div>
+              <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:90ms">
+                <span class="guru-skeleton guru-skeleton-accent"></span>
+                <span class="guru-skeleton guru-skeleton-avatar"></span>
+                <span class="guru-skeleton guru-skeleton-pill"></span>
+                <span class="guru-skeleton guru-skeleton-name"></span>
+                <span class="guru-skeleton guru-skeleton-role"></span>
+                <span class="guru-skeleton guru-skeleton-info"></span>
+              </div>
+              <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:135ms">
+                <span class="guru-skeleton guru-skeleton-accent"></span>
+                <span class="guru-skeleton guru-skeleton-avatar"></span>
+                <span class="guru-skeleton guru-skeleton-pill"></span>
+                <span class="guru-skeleton guru-skeleton-name"></span>
+                <span class="guru-skeleton guru-skeleton-role"></span>
+                <span class="guru-skeleton guru-skeleton-info"></span>
+              </div>
+              <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:180ms">
+                <span class="guru-skeleton guru-skeleton-accent"></span>
+                <span class="guru-skeleton guru-skeleton-avatar"></span>
+                <span class="guru-skeleton guru-skeleton-pill"></span>
+                <span class="guru-skeleton guru-skeleton-name"></span>
+                <span class="guru-skeleton guru-skeleton-role"></span>
+                <span class="guru-skeleton guru-skeleton-info"></span>
+              </div>
+              <div class="guru-skeleton-card" aria-hidden="true" style="--skeleton-delay:225ms">
+                <span class="guru-skeleton guru-skeleton-accent"></span>
+                <span class="guru-skeleton guru-skeleton-avatar"></span>
+                <span class="guru-skeleton guru-skeleton-pill"></span>
+                <span class="guru-skeleton guru-skeleton-name"></span>
+                <span class="guru-skeleton guru-skeleton-role"></span>
+                <span class="guru-skeleton guru-skeleton-info"></span>
+              </div>
           </div>
         </div>
 
