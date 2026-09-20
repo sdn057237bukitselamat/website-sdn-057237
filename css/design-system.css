@@ -899,6 +899,7 @@ body {
 .guru-directory-section > .container { position: relative; z-index: 1; }
 
 .guru-card {
+  animation: none;
   transform: translateY(0);
   transition:
     transform .3s cubic-bezier(.2,.75,.25,1),
