@@ -416,6 +416,17 @@ async function initGuruDirectory() {
     const count = grid.querySelectorAll(`[data-guru-category]`).length;
     grid.setAttribute('aria-label', `${count} data guru dan tenaga kependidikan`);
 
+    // Keep filter counts synchronized with the actual source data.
+    const countMap = people.reduce((map, person) => {
+      const key = person.kategori || 'guru';
+      map[key] = (map[key] || 0) + 1;
+      map.all = (map.all || 0) + 1;
+      return map;
+    }, {});
+    document.querySelectorAll('.filter-count[data-count]').forEach(counter => {
+      counter.textContent = countMap[counter.dataset.count] || 0;
+    });
+
     // Re-apply the active filter after async rendering.
     const group = document.querySelector('.filter-tabs[data-target="guru"]');
     const activeButton = group?.querySelector('.filter-btn.active');
